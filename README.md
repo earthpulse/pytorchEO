@@ -11,7 +11,7 @@ It is built on the shoulders of giants like PyTorch and PyTorch Lightning.
 
 🚧  Under development
 
-## Future Roadmap(Contributions are Welcome)
+## Future Roadmap 
 
 - Project skeleton
 - Testing, documentation, pip project
