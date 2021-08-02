@@ -27,3 +27,10 @@ good first issue
 branch names
 
 ...
+
+## Upload to pypi
+
+```
+python setup.py sdist
+twine upload --repository pypi dist/*
+```

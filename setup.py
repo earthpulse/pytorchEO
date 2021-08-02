@@ -5,13 +5,13 @@ import setuptools
 assert parse(setuptools.__version__) >= parse('36.2')
 #cmdclass = {'build_sphinx': BuildDoc}
 
-name = 'pytorch-eo'
+name = 'pytorch_eo'
 version = '0.1'
 release = '0.0.1'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'juan@earthpulse.es'
-url = 'https://github.com/earthpulse/pytorch-eo'
+url = 'https://github.com/earthpulse/pytorch_eo'
 keywords = ['pytorch', 'pytorch-lightnint', 'deep learning', 'earth observation', 'satellite imagery']
 
 setuptools.setup(
