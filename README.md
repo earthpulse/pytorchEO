@@ -23,7 +23,7 @@ pip install pytorch-eo
 
 Pytorch EO is open source and maintaned by earthpulse. We welcome contributions from the community to advance the field of Deep Learning for EO applciations.
 
-Join our [Discord](https://discord.gg/Pa2PRuhGUX) and read the [CONTRIBUTING])() guide to become a contributor.
+Join our [Discord](https://discord.gg/Pa2PRuhGUX) and read the [CONTRIBUTING](./CONTRIBUTING.md) guide to become a contributor.
 
 ## Roadmap 
 
