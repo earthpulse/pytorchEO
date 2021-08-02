@@ -14,7 +14,8 @@ jobs:
         architecture: 'x64'
     - name: Install the library
       run: |
-        pip install packaging numpy
+        pip install --upgrade pip
+        pip install packaging pytest numpy
         pip install -e .
     - name: Run tests
       run: |
