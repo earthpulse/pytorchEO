@@ -5,8 +5,8 @@ assert parse(setuptools.__version__) >= parse('36.2')
 cmdclass = {'build_sphinx': BuildDoc}
 
 name = 'pytorch_eo'
-version = '0.0'
-release = '0.0.2'
+version = '2021.08'
+release = '2021.08.03'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'it@earthpulse.es'
