@@ -25,6 +25,7 @@ class EuroSAT(EuroSATBase):
                          compressed_data_filename, data_folder, test_size, val_size, random_state,
                          num_workers, pin_memory, shuffle, verbose)
         self.bands = bands
+        self.in_chans = len(bands)
 
     def setup(self, stage=None):
         super().setup(stage=stage)
