@@ -10,8 +10,8 @@ pip install pytorch-eo
 
 ## Examples
 
-Learn by doing with our [examples](./examples).
+Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples).
 
 ## Contributing
 
-Read the [CONTRIBUTING](./CONTRIBUTING.md) guide.
+Read the [CONTRIBUTING](https://github.com/earthpulse/pytorch_eo/blob/main/CONTRIBUTING.md) guide.
