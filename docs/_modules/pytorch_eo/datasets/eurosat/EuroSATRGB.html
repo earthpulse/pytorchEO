@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pytorch_eo.datasets.eurosat.EuroSATRGB &mdash; pytorch_eo 2021.08.03 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> pytorch_eo
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2021.08
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pytorch_eo.html">pytorch_eo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../datasets.html">datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tasks.html">tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../datasets.html">datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../eurosat.html">eurosat</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">pytorch_eo</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pytorch_eo.datasets.eurosat.EuroSATRGB</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pytorch_eo.datasets.eurosat.EuroSATRGB</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pytorch_eo.utils.datasets.RGBClassificationDataset</span> <span class="kn">import</span> <span class="n">RGBClassificationDataset</span>
+<span class="kn">from</span> <span class="nn">.EuroSATBase</span> <span class="kn">import</span> <span class="n">EuroSATBase</span>
+
+
+<div class="viewcode-block" id="EuroSATRGB"><a class="viewcode-back" href="../../../../eurosat.html#pytorch_eo.datasets.eurosat.EuroSATRGB.EuroSATRGB">[docs]</a><span class="k">class</span> <span class="nc">EuroSATRGB</span><span class="p">(</span><span class="n">EuroSATBase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">batch_size</span><span class="p">,</span>
+                 <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">path</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span>
+                 <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                 <span class="n">val_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                 <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+                 <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+                 <span class="p">):</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://madm.dfki.de/files/sentinel/EuroSAT.zip&quot;</span>
+        <span class="n">compressed_data_filename</span> <span class="o">=</span> <span class="s1">&#39;EuroSAT.zip&#39;</span>
+        <span class="n">data_folder</span> <span class="o">=</span> <span class="s1">&#39;2750&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">download</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span>
+                         <span class="n">compressed_data_filename</span><span class="p">,</span> <span class="n">data_folder</span><span class="p">,</span> <span class="n">test_size</span><span class="p">,</span> <span class="n">val_size</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span>
+                         <span class="n">num_workers</span><span class="p">,</span> <span class="n">pin_memory</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_chans</span> <span class="o">=</span> <span class="mi">3</span>
+
+<div class="viewcode-block" id="EuroSATRGB.setup"><a class="viewcode-back" href="../../../../eurosat.html#pytorch_eo.datasets.eurosat.EuroSATRGB.EuroSATRGB.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">stage</span><span class="o">=</span><span class="n">stage</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_ds</span> <span class="o">=</span> <span class="n">RGBClassificationDataset</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_images</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_labels</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">val_ds</span> <span class="o">=</span> <span class="n">RGBClassificationDataset</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_images</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_labels</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_ds</span> <span class="o">=</span> <span class="n">RGBClassificationDataset</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_images</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_labels</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, The Author.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

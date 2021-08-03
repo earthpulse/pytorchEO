@@ -1,10 +1,10 @@
-pypi: test docs dist
+pypi: test docums dist
 	twine upload --repository pypi dist/*
 dist: clean
 	python setup.py sdist
 clean:
 	rm -rf dist
-docs: 
+docum: 
 	python sphinx/rst.py pytorch_eo sphinx/source
 	python setup.py build_sphinx --build-dir sphinx/build
 	rm -rf docs

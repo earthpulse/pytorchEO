@@ -16,6 +16,10 @@ Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree
 
 - [EuroSAT](https://github.com/phelber/EuroSAT)
 
+## Documentation
+
+Read our [docs](https://earthpulse.github.io/pytorch_eo/).
+
 ## Contributing
 
 Read the [CONTRIBUTING](https://github.com/earthpulse/pytorch_eo/blob/main/CONTRIBUTING.md) guide.
