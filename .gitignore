@@ -1,0 +1,7 @@
+dist
+*.egg-info
+__pycache__
+sphinx/build
+sphinx/source/*.rst
+.pytest_cache
+examples/data

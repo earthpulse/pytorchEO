@@ -1,12 +1,12 @@
-#from sphinx.setup_command import BuildDoc
+from sphinx.setup_command import BuildDoc
 from packaging.version import parse
 import setuptools
 assert parse(setuptools.__version__) >= parse('36.2')
-#cmdclass = {'build_sphinx': BuildDoc}
+cmdclass = {'build_sphinx': BuildDoc}
 
 name = 'pytorch_eo'
 version = '0.0'
-release = '0.0.1'
+release = '0.0.2'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'it@earthpulse.es'
@@ -43,11 +43,11 @@ setuptools.setup(
     ],
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    #     cmdclass=cmdclass,
-    #     command_options={
-    #         'build_sphinx': {
-    #             'project': ('setup.py', name),
-    #             'version': ('setup.py', version),
-    #             'release': ('setup.py', release),
-    #             'source_dir': ('setup.py', 'sphinx/source')}}
+    cmdclass=cmdclass,
+    command_options={
+        'build_sphinx': {
+            'project': ('setup.py', name),
+            'version': ('setup.py', version),
+            'release': ('setup.py', release),
+            'source_dir': ('setup.py', 'sphinx/source')}}
 )
