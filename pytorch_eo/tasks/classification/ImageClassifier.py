@@ -24,9 +24,9 @@ class ImageClassifier(pl.LightningModule):
         return self.model(x)
 
     def accuracy(self, y_hat, y):
-        return (torch.argmax(y_hat, axis=1) == y).sum().cpu().item() / y.shape[0]
+        return (torch.argmax(y_hat, axis=1) == y).sum() / y.shape[0]
 
-    def step(self, batch, batch_idx):
+    def step(self, batch):
         x, y = batch
         y_hat = self(x)
         loss = F.cross_entropy(y_hat, y)
@@ -44,10 +44,20 @@ class ImageClassifier(pl.LightningModule):
         self.log('val_loss', val_loss, prog_bar=True)
         self.log('val_acc', val_acc, prog_bar=True)
 
+    def test_step(self, batch, batch_idx):
+        test_loss, test_acc = self.step(batch)
+        self.log('test_acc', test_acc)
+
+    def predict(self, x):
+        self.eval()
+        with torch.no_grad():
+            y_hat = self(x.to(self.device))
+            return torch.softmax(y_hat, axis=1)
+
     def configure_optimizers(self):
         optimizer = getattr(torch.optim, self.hparams.optimizer)(
             self.parameters(), lr=self.hparams.lr)
-        if 'scheduler' in self.hparams:
+        if self.hparams.scheduler:
             schedulers = [
                 getattr(torch.optim.lr_scheduler, scheduler)(
                     optimizer, **params)
