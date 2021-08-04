@@ -1,12 +1,12 @@
 #from sphinx.setup_command import BuildDoc
-from packaging.version import parse
+#from packaging.version import parse
 import setuptools
-assert parse(setuptools.__version__) >= parse('36.2')
+#assert parse(setuptools.__version__) >= parse('36.2')
 #cmdclass = {'build_sphinx': BuildDoc}
 
 name = 'pytorch_eo'
-version = '2021.08'
-release = '2021.08.03'
+version = '21.8'
+release = '21.8.4'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'it@earthpulse.es'

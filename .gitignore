@@ -7,3 +7,5 @@ sphinx/source/*.rst
 examples/data
 *.pt 
 *.pth
+*.ckpt
+lightning_logs
