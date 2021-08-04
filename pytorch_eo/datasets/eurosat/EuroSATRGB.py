@@ -1,4 +1,4 @@
-from pytorch_eo.utils.datasets.RGBClassificationDataset import RGBClassificationDataset
+from pytorch_eo.utils.datasets.ClassificationDataset import ClassificationDataset
 from .EuroSATBase import EuroSATBase
 
 
@@ -28,11 +28,11 @@ class EuroSATRGB(EuroSATBase):
     def setup(self, stage=None):
         super().setup(stage=stage)
 
-        self.train_ds = RGBClassificationDataset(
+        self.train_ds = ClassificationDataset(
             self.train_images, self.train_labels)
 
-        self.val_ds = RGBClassificationDataset(
+        self.val_ds = ClassificationDataset(
             self.val_images, self.val_labels)
 
-        self.test_ds = RGBClassificationDataset(
+        self.test_ds = ClassificationDataset(
             self.test_images, self.test_labels)

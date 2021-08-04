@@ -14,7 +14,7 @@ class ClassificationDataset(Dataset):
         return len(self.images)
 
     def _read_image(self, img):
-        pass
+        return read_image(img)
 
     def _norm_image(self, img):
         return (img / self.norm_value)

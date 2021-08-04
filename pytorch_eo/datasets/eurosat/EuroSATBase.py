@@ -47,14 +47,17 @@ class EuroSATBase(pl.LightningDataModule):
         if self.download:
             # create data folder
             os.makedirs(self.path, exist_ok=True)
-            # check data is not already downloaded
-            if not os.path.isfile(compressed_data_path):
-                print("downloading data ...")
-                download_url(self.url, compressed_data_path)
-            else:
-                print("data already downloaded !")
+
             # extract
             if not os.path.isdir(uncompressed_data_path):
+
+                # check data is not already downloaded
+                if not os.path.isfile(compressed_data_path):
+                    print("downloading data ...")
+                    download_url(self.url, compressed_data_path)
+                else:
+                    print("data already downloaded !")
+
                 unzip_file(compressed_data_path, self.path,
                            msg="extracting data ...")
             else:
