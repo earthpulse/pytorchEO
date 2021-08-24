@@ -82,12 +82,14 @@ class EuroSATBase(pl.LightningDataModule):
             print(f'Number of images: {len(images)}')
 
         # data splits
+        test_size = int(len(images) * self.test_size)
+        val_size = int(len(images) * self.val_size)
 
         train_images, self.test_images, train_labels, self.test_labels = train_test_split(
             images,
             encoded,
             stratify=encoded,
-            test_size=self.test_size,
+            test_size=test_size,
             random_state=self.random_state
         )
 
@@ -95,7 +97,7 @@ class EuroSATBase(pl.LightningDataModule):
             train_images,
             train_labels,
             stratify=train_labels,
-            test_size=self.val_size,
+            test_size=val_size,
             random_state=self.random_state
         )
 

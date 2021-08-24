@@ -46,7 +46,7 @@ class SegmentationDataset(Dataset):
     def __getitem__(self, ix):
         img = self._read_image(self.images[ix])
         img_norm = self._norm_image(img)
-        if self.masks:
+        if self.masks is not None:
             mask = self._read_mask(self.masks[ix])
             img_trans, mask_trans = self._trans_image(
                 img_norm, mask)  # on normalized img

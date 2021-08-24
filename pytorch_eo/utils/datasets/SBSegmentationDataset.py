@@ -17,8 +17,5 @@ class SBSegmentationDataset(SegmentationDataset):
         img = np.stack(bands_data)  # C, H, W
         return img
 
-    def _read_mask(self, mask):
-        return np.zeros((256, 256))
-
     def _img_to_tensor(self, img):
         return torch.from_numpy(img).float().clip(0, 1)  # C, H, W

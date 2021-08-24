@@ -2,6 +2,8 @@
 
 Deep Learning for Earth Observation applications and research.
 
+> 🚧 This project is in early development, so bugs and breaking changes are expected until we reach a stable version.
+
 ## Installation
 
 ```
