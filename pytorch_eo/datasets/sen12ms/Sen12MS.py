@@ -98,7 +98,11 @@ class Sen12MS(pl.LightningDataModule):
                  pin_memory=False,
                  shuffle=True,
                  verbose=True,
-                 sensor=Sensor.S2
+                 sensor=Sensor.S2,
+                 train_trans=None,
+                 val_trans=None,
+                 test_trans=None,
+                 **kwargs
                  ):
         super().__init__()
         self.batch_size = batch_size
@@ -132,6 +136,9 @@ class Sen12MS(pl.LightningDataModule):
             self.Dataset = S2Dataset
         else:
             raise ValueError("Invalid sensor")
+        self.train_trans = train_trans
+        self.test_trans = test_trans
+        self.val_trans = val_trans
 
     def get_scene_ids(self, season):
         season = Seasons(season).value
@@ -226,11 +233,11 @@ class Sen12MS(pl.LightningDataModule):
         # datasets
 
         self.train_ds = self.Dataset(
-            train_df.image.values, train_df['mask'].values, self.classes)
+            train_df.image.values, train_df['mask'].values, self.classes, self.train_trans)
         self.val_ds = self.Dataset(
-            val_df.image.values, val_df['mask'].values, self.classes)
+            val_df.image.values, val_df['mask'].values, self.classes, self.val_trans)
         self.test_ds = self.Dataset(
-            test_df.image.values, test_df['mask'].values, self.classes)
+            test_df.image.values, test_df['mask'].values, self.classes, self.test_trans)
 
     def train_dataloader(self):
         return DataLoader(

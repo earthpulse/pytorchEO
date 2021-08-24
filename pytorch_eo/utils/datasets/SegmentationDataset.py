@@ -29,7 +29,7 @@ class SegmentationDataset(Dataset):
 
     def _trans_image(self, img, mask=None):
         if self.trans:  # albumentations
-            if mask:
+            if mask is not None:
                 trans = self.trans(image=img, mask=mask)
                 return trans['image'], trans['mask']
             return self.trans(image=img)['image']
