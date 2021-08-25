@@ -22,7 +22,18 @@ class Dataset(SegmentationDataset):
     def _norm_image(self, img):
         return np.clip(10.**(img / 10.), 0, 1)  # undo db, 0-1
 
+    def _img_to_tensor(self, img):
+        img_t = torch.from_numpy(img).float().permute(2, 0, 1)
+
+        if torch.any(img_t.isnan()):  # there are nans in some images !
+            img_t[img_t != img_t] = 0
+            if torch.any(img_t.isnan()):
+                raise ValueError('image has nans !')
+
+        return img_t
+
     def _mask_to_tensor(self, mask):
+
         # MODIS Land Cover: 4 channels corresponding to IGBP, LCCS Land Cover, LCCS Land Use, and LCCS Surface Hydrology layers.
         # The overall accuracies of the layers are about 67% (IGBP), 74% (LCCS land cover), 81% (LCCS land use), and 87% (LCCS sur- face hydrology), respectively
 
@@ -40,7 +51,12 @@ class Dataset(SegmentationDataset):
         mask_oh = (np.arange(self.num_classes) ==
                    _mask[..., None])
 
-        return torch.from_numpy(mask_oh).float().permute(2, 0, 1)
+        mask_oh_t = torch.from_numpy(mask_oh).float().permute(2, 0, 1)
+
+        if torch.any(mask_oh_t.isnan()):
+            raise ValueError('mask has nans !')
+
+        return mask_oh_t
 
 
 class S1Dataset(Dataset):
