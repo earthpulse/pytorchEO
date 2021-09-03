@@ -4,8 +4,8 @@
 
 We are happy to accept contributions by the community in the form of:
 
-1. [Datasets](pytorch_eo/datasets): Pytorch Lightning datamodules ready to train models (download and pre-process data)
-2. [Tasks](pytorch_eo/tasks): Pytorch Lightning modules for training neural networks
+1. [Datasets](pytorch_eo/datasets): Pytorch Lightning datamodules ready to train models (download and pre-process data).
+2. [Tasks](pytorch_eo/tasks): Pytorch Lightning modules for training neural networks.
 3. [Examples](examples): Notebooks showing what you can do with Pytorch EO.
 
 ## Instructions
