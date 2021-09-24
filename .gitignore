@@ -5,6 +5,7 @@ sphinx/build
 sphinx/source/*.rst
 .pytest_cache
 examples/data
+tutorials/data
 *.pt 
 *.pth
 *.ckpt
