@@ -1,4 +1,4 @@
-pypi: test docums dist
+pypi: test dist
 	twine upload --repository pypi dist/*
 dist: clean
 	python setup.py sdist

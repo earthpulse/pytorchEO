@@ -6,7 +6,7 @@ import setuptools
 
 name = 'pytorch_eo'
 version = '21.9'
-release = '21.9.24'
+release = '21.9.25'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'it@earthpulse.es'
