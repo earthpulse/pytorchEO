@@ -6,8 +6,6 @@ Deep Learning for Earth Observation applications and research.
 
 ## Installation
 
-Make sure that you have the dependencies installed.
-
 ```
 pip install pytorch-eo
 ```
@@ -20,8 +18,6 @@ Pytorch EO is built on top of:
 - [Torchvision](https://pytorch.org/vision/stable/index.html)
 - [Pytorch-Lightning](https://www.pytorchlightning.ai/)
 - [Rasterio](https://rasterio.readthedocs.io/en/latest/)
-
-Do you need to learn these libraries first ? NO! You can just get started with our [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples) and [tutorials](https://github.com/earthpulse/pytorch_eo/tree/main/tutorials). However, if you plan to use Pytorch EO extensively and want to get the most out of it, you may have to become familiar with them.
 
 ## Examples
 
@@ -36,7 +32,7 @@ Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree
 
 Using SCAN you can annotate your own data and access it directly through Pytorch EO. -->
 
-## Research
+<!-- ## Research
 
 Pytorch EO can be a useful tool for research:
 
@@ -51,10 +47,10 @@ Pytorch EO was built with production in mind from the beginning:
 
 - Optimize model for production.
 - Export models to torchscript.
-<!-- - Upload models to our Models Universe
-- Use models directly through SPAI -->
+- Upload models to our Models Universe
+- Use models directly through SPAI
 
-See the [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples).
+See the [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples). -->
 
 <!-- ## Documentation
 
