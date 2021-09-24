@@ -40,8 +40,8 @@ Using SCAN you can annotate your own data and access it directly through Pytorch
 
 Pytorch EO can be a useful tool for research:
 
-- Flexibility to build new models
-- Reproducibility: use same data splits and random seeds to compare with others
+- Flexibility: build and experiment with new models for EO applications.
+- Reproducibility: use same data splits and random seeds to compare with others.
 
 See the [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples).
 
@@ -49,8 +49,8 @@ See the [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples).
 
 Pytorch EO was built with production in mind from the beginning:
 
-- Optimize model for production
-- Export models to torchscript
+- Optimize model for production.
+- Export models to torchscript.
 <!-- - Upload models to our Models Universe
 - Use models directly through SPAI -->
 

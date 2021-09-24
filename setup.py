@@ -6,7 +6,7 @@ import setuptools
 
 name = 'pytorch_eo'
 version = '21.9'
-release = '21.9.25'
+release = '21.9.26'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'it@earthpulse.es'
@@ -25,8 +25,8 @@ setuptools.setup(
     url=url,
     keywords=keywords,
     install_requires=[
-        'pytorch',
-        'torchvision',
+        #'pytorch',
+        #'torchvision',
         'pytorch_lightning',
         'rasterio'
     ],
