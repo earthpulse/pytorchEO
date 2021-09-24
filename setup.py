@@ -6,7 +6,7 @@ import setuptools
 
 name = 'pytorch_eo'
 version = '21.9'
-release = '21.9.26'
+release = '21.9.27'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'it@earthpulse.es'
@@ -24,12 +24,8 @@ setuptools.setup(
     author_email=email,
     url=url,
     keywords=keywords,
-    install_requires=[
-        #'pytorch',
-        #'torchvision',
-        'pytorch_lightning',
-        'rasterio'
-    ],
+    install_requires=['torch >= 1.4', 'torchvision', 'pytorch_lightning', 'rasterio'],
+    python_requires='>=3.6',
     classifiers=[
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
         'Development Status :: 3 - Alpha',
@@ -38,10 +34,9 @@ setuptools.setup(
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',   # Again, pick a license
         # Specify which pyhton versions that you want to support
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',

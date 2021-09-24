@@ -2,6 +2,7 @@ from pytorch_eo.utils import read_image
 from torch.utils.data import Dataset
 import torch
 import numpy as np
+import torch.nn.functional as F
 
 
 class SegmentationDataset(Dataset):
@@ -27,30 +28,26 @@ class SegmentationDataset(Dataset):
     def _norm_image(self, img):
         return (img / self.norm_value)
 
-    def _trans_image(self, img, mask=None):
-        if self.trans:  # albumentations
+    def _trans_image_mask(self, img, mask=None):
+        if self.trans:  # albumentations by default
             if mask is not None:
                 trans = self.trans(image=img, mask=mask)
                 return trans['image'], trans['mask']
             return self.trans(image=img)['image']
         return img, mask
 
-    def _img_to_tensor(self, img):
-        return torch.from_numpy(img).float().permute(2, 0, 1)
-
     def _mask_to_tensor(self, mask):
-        mask_oh = (np.arange(self.num_classes) ==
-                   mask[..., None])  # one hot encoding
-        return torch.from_numpy(mask_oh).float().permute(2, 0, 1)
+        # mask must be long to one hot, but for training we need float
+        # C, H, W
+        return F.one_hot(mask, num_classes=self.num_classes).permute(2, 0, 1).float()
 
     def __getitem__(self, ix):
         img = self._read_image(self.images[ix])
         img_norm = self._norm_image(img)
         if self.masks is not None:
             mask = self._read_mask(self.masks[ix])
-            img_trans, mask_trans = self._trans_image(
+            img_t, mask_trans = self._trans_image_mask(
                 img_norm, mask)  # on normalized img
-            img_t = self._img_to_tensor(img_trans)
             mask_t = self._mask_to_tensor(mask_trans)
             return img_t, mask_t
         img_trans = self._trans_image(img_norm)  # on normalized img

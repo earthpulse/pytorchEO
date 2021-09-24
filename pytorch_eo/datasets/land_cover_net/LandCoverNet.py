@@ -1,32 +1,29 @@
-from pytorch_eo.utils import untar_file
-import pytorch_lightning as pl
 import os
 import glob
-from sklearn.model_selection import train_test_split
 from pathlib import Path
-from torch.utils.data import DataLoader
 from pytorch_eo.utils.datasets.SBSegmentationDataset import SBSegmentationDataset
 import pandas as pd
-import numpy as np
-import torch
+from ..S2Dataset import S2Dataset
+from ...utils.read_image import read_ms_image
 
 
 class Dataset(SBSegmentationDataset):
 
-    def __init__(self, images, masks=None, trans=None, bands=('B04', 'B03', 'B02'), num_classes=8, norm_value=4000):
+    def __init__(self, images, masks, trans, bands, num_classes, norm_value):
         super().__init__(images, masks, trans, bands, num_classes, norm_value)
 
     def _read_mask(self, mask):
-        return super()._read_mask(mask)[..., 0]
+        return read_ms_image(mask, 1).long().squeeze(0)  # H, W
 
 
-class LandCoverNet(pl.LightningDataModule):
+class LandCoverNet(S2Dataset):
 
     # THIS DATASET NEEDS TO BE DOWNLOADED THROUGH https://registry.mlhub.earth/10.34911/rdnt.d2ce8i/
     # CAN WE HAVE A PUBLIC LINK ?
 
     # WE HAVE 1980 LABELS, DERIVED FROM S2 TIME SERIES
     # THIS DATASET ASSIGNS THE SAME MASK TO ALL IMAGES IN THE SAME TIME SERIES
+    # in the future we will make datasets with time series
 
     def __init__(self,
                  batch_size,
@@ -35,27 +32,25 @@ class LandCoverNet(pl.LightningDataModule):
                  compressed_labels_filename='ref_landcovernet_v1_labels.tar',
                  data_folder='ref_landcovernet_v1_source',
                  labels_folder='ref_landcovernet_v1_labels',
+                 train_sampler=None,
+                 test_sampler=None,
+                 val_sampler=None,
                  test_size=0.2,
                  val_size=0.2,
-                 random_state=42,
                  num_workers=0,
                  pin_memory=False,
-                 shuffle=True,
-                 verbose=True
+                 seed=42,
+                 verbose=False,
+                 trans=None,
+                 dataset=None,
+                 bands=None,
+                 norm_value=4000
                  ):
-        super().__init__()
-        self.batch_size = batch_size
+        super().__init__(batch_size, train_sampler, test_sampler, val_sampler,
+                         test_size, val_size, verbose, num_workers, pin_memory, seed, bands)
         self.path = Path(path)
         self.compressed_data_filename = compressed_data_filename
         self.compressed_labels_filename = compressed_labels_filename
-        self.num_classes = 10
-        self.test_size = test_size
-        self.val_size = val_size
-        self.random_state = random_state
-        self.num_workers = num_workers
-        self.pin_memory = pin_memory
-        self.shuffle = shuffle
-        self.verbose = verbose
         self.data_folder = data_folder
         self.labels_folder = labels_folder
         self.classes = [  # class position in the list corresponds to value in mask
@@ -69,16 +64,9 @@ class LandCoverNet(pl.LightningDataModule):
             {'name': 'semi-natural-vegetation', 'color': '#00ff00'},
         ]
         self.num_classes = len(self.classes)
-        self.in_chans = 3
-
-    def uncompress(self, compressed_data_filename, data_folder, msg):
-
-        compressed_data_path = self.path / compressed_data_filename
-        uncompressed_data_path = self.path / data_folder
-        if not os.path.isdir(uncompressed_data_path):
-            untar_file(compressed_data_path, self.path, msg=msg)
-        else:  # TODO: Validate data is correct
-            pass
+        self.trans = trans
+        self.dataset = dataset
+        self.norm_value = norm_value
 
     def setup(self, stage=None):
 
@@ -107,61 +95,19 @@ class LandCoverNet(pl.LightningDataModule):
             assert os.path.isdir(image), f'image {image} not found'
             assert os.path.isfile(mask), f'mask {mask} not found'
 
-        # data splits (can we stratify ?)
-        test_size = int(len(images) * self.test_size)
-        val_size = int(len(images) * self.val_size)
+        if self.dataset:
+            self.ds = self.dataset(
+                images, masks, self.trans, self.bands, self.num_classes, self.norm_value)
+        else:
+            self.ds = Dataset(images, masks, self.trans,
+                              self.bands, self.num_classes, self.norm_value)
 
-        train_images, self.test_images, train_masks, self.test_masks = train_test_split(
-            images,
-            masks,
-            test_size=test_size,
-            random_state=self.random_state
-        )
+        self.make_splits()
 
-        self.train_images, self.val_images, self.train_masks, self.val_masks = train_test_split(
-            train_images,
-            train_masks,
-            test_size=val_size,
-            random_state=self.random_state
-        )
-
-        if self.verbose:
-            print("training samples", len(self.train_images))
-            print("validation samples", len(self.val_images))
-            print("test samples", len(self.test_images))
-
-        # datasets
-
-        self.train_ds = Dataset(
-            self.train_images, self.train_masks, num_classes=self.num_classes)
-        self.val_ds = Dataset(
-            self.val_images, self.val_masks, num_classes=self.num_classes)
-        self.test_ds = Dataset(
-            self.test_images, self.test_masks, num_classes=self.num_classes)
-
-    def train_dataloader(self):
-        return DataLoader(
-            self.train_ds,
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
-            pin_memory=self.pin_memory,
-            shuffle=self.shuffle
-        )
-
-    def val_dataloader(self):
-        return DataLoader(
-            self.val_ds,
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
-            pin_memory=self.pin_memory,
-            shuffle=False
-        )
-
-    def test_dataloader(self):
-        return DataLoader(
-            self.test_ds,
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
-            pin_memory=self.pin_memory,
-            shuffle=False
-        )
+    # def uncompress(self, compressed_data_filename, data_folder, msg):
+    #     compressed_data_path = self.path / compressed_data_filename
+    #     uncompressed_data_path = self.path / data_folder
+    #     if not os.path.isdir(uncompressed_data_path):
+    #         untar_file(compressed_data_path, self.path, msg=msg)
+    #     else:  # TODO: Validate data is correct
+    #         pass

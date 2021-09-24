@@ -25,14 +25,10 @@ class ClassificationDataset(Dataset):
             return img_trans
         return img
 
-    def _to_tensor(self, img):
-        return img
-
     def __getitem__(self, ix):
         img = self._read_image(self.images[ix])
         img_norm = self._norm_image(img)
-        img_trans = self._trans_image(img_norm)  # on normalized img
-        img_t = self._to_tensor(img_trans)
+        img_t = self._trans_image(img_norm)  # on normalized img
         if self.labels:
             label_t = torch.tensor(self.labels[ix], dtype=torch.long)
             return img_t, label_t

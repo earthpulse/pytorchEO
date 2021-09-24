@@ -1,11 +1,13 @@
-from .EuroSATBase import EuroSATBase
-from pytorch_eo.utils.datasets.S2ClassificationDataset import S2ClassificationDataset
-from ...utils.sensors import S2
+from pathlib import Path
 
-class EuroSAT(EuroSATBase):
+from pytorch_eo.utils.datasets.S2ClassificationDataset import S2ClassificationDataset
+from ..S2Dataset import S2Dataset
+from .utils import *
+
+class EuroSAT(S2Dataset):
 
     def __init__(self,
-                 batch_size,
+                 batch_size=32,
                  download=True,
                  path="./data",
                  train_sampler=None,
@@ -17,39 +19,37 @@ class EuroSAT(EuroSATBase):
                  pin_memory=False,
                  seed=42,
                  verbose=False,
-                 bands=None,
                  trans=None,
                  dataset=None,
+                 bands=None,
                  norm_value=4000
                  ):
-
-        url = "http://madm.dfki.de/files/sentinel/EuroSATallBands.zip"
-        compressed_data_filename = 'EuroSATallBands.zip'
-        data_folder = 'ds/images/remote_sensing/otherDatasets/sentinel_2/tif'
-        super().__init__(batch_size, download, url, path,
-                         compressed_data_filename, data_folder, 
-                         train_sampler, test_sampler, val_sampler,
-                         test_size, val_size, 
-                         num_workers, pin_memory, seed, verbose)
-        
-        self.bands = bands
-        if bands is None:
-            self.bands = S2.ALL
-
-        if isinstance(self.bands, list):
-            self.in_chans = len(bands)
-            for band in self.bands:
-                assert band in S2, 'invalid band'
-        else:
-            assert self.bands in S2, 'invalid band'
-            if isinstance(self.bands.value, list):
-                self.in_chans = len(self.bands.value)
-            else:
-                self.in_chans = 1            
-
+        super().__init__(batch_size, train_sampler, test_sampler, val_sampler, test_size, val_size, verbose, num_workers, pin_memory, seed, bands)
+        self.download = download
+        self.path = Path(path)
+        self.url = "http://madm.dfki.de/files/sentinel/EuroSATallBands.zip"
+        self.compressed_data_filename = 'EuroSATallBands.zip'
+        self.data_folder = 'ds/images/remote_sensing/otherDatasets/sentinel_2/tif'  
         self.trans = trans
         self.dataset = dataset
         self.norm_value = norm_value
+        self.num_classes = 10
+
+    def setup(self, stage=None):
+        super().setup(stage)
+        uncompressed_data_path = download_data(
+            self.path, 
+            self.compressed_data_filename,
+            self.data_folder, 
+            self.download, 
+            self.url, 
+            self.verbose
+        )
+        self.classes = generate_classes_list(uncompressed_data_path)
+        assert len(self.classes) == self.num_classes
+        self.images, self.labels = generate_lists(self.classes, uncompressed_data_path, self.verbose)
+        self.ds = self.build_dataset()
+        self.make_splits()
 
     def build_dataset(self):
         if self.dataset:
