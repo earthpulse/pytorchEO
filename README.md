@@ -30,11 +30,11 @@ Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree
 ### Ready to use Datasets
 
 - [EuroSAT](https://github.com/phelber/EuroSAT)
+- [LandCoverNet](https://mlhub.earth/10.34911/rdnt.d2ce8i)
 
 <!-- ### Build your own Datasets
 
 Using SCAN you can annotate your own data and access it directly through Pytorch EO. -->
-
 
 ## Research
 
