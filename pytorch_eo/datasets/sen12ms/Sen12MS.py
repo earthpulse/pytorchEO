@@ -225,7 +225,7 @@ class Sen12MS(pl.LightningDataModule):
         test_size = int(len(df) * self.test_size)
         val_size = int(len(df) * self.val_size)
 
-        train_df, test_df = train_test_split(
+        train_df, self.test_df = train_test_split(
             df,
             test_size=test_size,
             random_state=self.random_state,
@@ -233,7 +233,7 @@ class Sen12MS(pl.LightningDataModule):
             shuffle=True
         )
 
-        train_df, val_df = train_test_split(
+        self.train_df, self.val_df = train_test_split(
             train_df,
             test_size=val_size,
             random_state=self.random_state,
@@ -242,18 +242,18 @@ class Sen12MS(pl.LightningDataModule):
         )
 
         if self.verbose:
-            print("training samples", len(train_df))
-            print("validation samples", len(val_df))
-            print("test samples", len(test_df))
+            print("training samples", len(self.train_df))
+            print("validation samples", len(self.val_df))
+            print("test samples", len(self.test_df))
 
         # datasets
 
         self.train_ds = self.Dataset(
-            train_df.image.values, train_df['mask'].values, self.classes, self.train_trans)
+            self.train_df.image.values, self.train_df['mask'].values, self.classes, self.train_trans)
         self.val_ds = self.Dataset(
-            val_df.image.values, val_df['mask'].values, self.classes, self.val_trans)
+            self.val_df.image.values, self.val_df['mask'].values, self.classes, self.val_trans)
         self.test_ds = self.Dataset(
-            test_df.image.values, test_df['mask'].values, self.classes, self.test_trans)
+            self.test_df.image.values, self.test_df['mask'].values, self.classes, self.test_trans)
 
     def train_dataloader(self):
         return DataLoader(

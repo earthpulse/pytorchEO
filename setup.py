@@ -5,8 +5,8 @@ import setuptools
 #cmdclass = {'build_sphinx': BuildDoc}
 
 name = 'pytorch_eo'
-version = '21.8'
-release = '21.8.4'
+version = '21.9'
+release = '21.9.10'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'it@earthpulse.es'
