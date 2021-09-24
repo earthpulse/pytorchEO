@@ -43,6 +43,8 @@ Pytorch EO can be a useful tool for research:
 - Flexibility to build new models
 - Reproducibility: use same data splits and random seeds to compare with others
 
+See the [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples).
+
 ## Production
 
 Pytorch EO was built with production in mind from the beginning:
@@ -52,6 +54,7 @@ Pytorch EO was built with production in mind from the beginning:
 <!-- - Upload models to our Models Universe
 - Use models directly through SPAI -->
 
+See the [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples).
 
 <!-- ## Documentation
 

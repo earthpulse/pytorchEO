@@ -1,10 +1,9 @@
 from pytorch_eo.utils import download_url, unzip_file
 import pytorch_lightning as pl
 import os
-from sklearn.model_selection import train_test_split
 from pathlib import Path
-from torch.utils.data import DataLoader
-
+from torch.utils.data import DataLoader, random_split, SequentialSampler, SubsetRandomSampler
+import torch
 
 class EuroSATBase(pl.LightningDataModule):
 
@@ -15,12 +14,14 @@ class EuroSATBase(pl.LightningDataModule):
                  path,
                  compressed_data_filename,
                  data_folder,
+                 train_sampler,
+                 test_sampler,
+                 val_sampler,
                  test_size,
                  val_size,
-                 random_state,
                  num_workers,
                  pin_memory,
-                 shuffle,
+                 seed,
                  verbose
                  ):
         super().__init__()
@@ -31,25 +32,72 @@ class EuroSATBase(pl.LightningDataModule):
         self.compressed_data_filename = compressed_data_filename
         self.data_folder = data_folder
         self.num_classes = 10
-        self.test_size = test_size
-        self.val_size = val_size
-        self.random_state = random_state
+        self.train_sampler = train_sampler
+        self.test_sampler = test_sampler
+        self.val_sampler = val_sampler
         self.num_workers = num_workers
         self.pin_memory = pin_memory
-        self.shuffle = shuffle
         self.verbose = verbose
+        self.test_size = test_size 
+        self.val_size = val_size
+        self.seed = seed
+
+    def build_dataset(self):
+        print("this function must be defined!")
+        pass
 
     def setup(self, stage=None):
 
+        self.download_data()
+        self.generate_classes_list()
+
+        # generate list of images and labels
+        self.images, self.labels = [], []
+        for ix, label in enumerate(self.classes):
+            _images = os.listdir(self.uncompressed_data_path / label)
+            self.images += [str(self.uncompressed_data_path /
+                       label / img) for img in _images]
+            self.labels += [ix]*len(_images)
+        assert len(self.images) == len(self.labels)
+        if self.verbose:
+            print(f'Number of images: {len(self.images)}')
+
+        self.ds = self.build_dataset()
+
+        if not self.train_sampler:
+            # data splits (random splits)
+            idxs = list(range(len(self.ds)))
+            testset_len = int(len(self.ds)*self.test_size)
+            trainset_len = len(self.ds) - testset_len
+            train_idxs, self.test_idxs = random_split(idxs, [trainset_len, testset_len], generator=torch.Generator().manual_seed(self.seed))
+            valset_len = int(len(self.ds)*self.val_size)
+            trainset_len = trainset_len - valset_len
+            self.train_idxs, self.val_idxs = random_split(train_idxs, [trainset_len, valset_len], generator=torch.Generator().manual_seed(self.seed))
+
+            self.train_sampler = SubsetRandomSampler(self.train_idxs)
+            self.val_sampler = SequentialSampler(self.val_idxs)
+            self.test_sampler = SequentialSampler(self.test_idxs)       
+
+            if not self.train_sampler:
+                raise ValueError("train sampler should be definied")     
+
+        if self.verbose:
+            print("training samples", len(self.train_sampler))
+            if self.val_sampler:
+                print("validation samples", len(self.val_sampler))
+            if self.test_sampler:
+                print("test samples", len(self.test_sampler))
+    
+    def download_data(self):
         # download data
         compressed_data_path = self.path / self.compressed_data_filename
-        uncompressed_data_path = self.path / self.data_folder
+        self.uncompressed_data_path = self.path / self.data_folder
         if self.download:
             # create data folder
             os.makedirs(self.path, exist_ok=True)
 
             # extract
-            if not os.path.isdir(uncompressed_data_path):
+            if not os.path.isdir(self.uncompressed_data_path):
 
                 # check data is not already downloaded
                 if not os.path.isfile(compressed_data_path):
@@ -61,74 +109,43 @@ class EuroSATBase(pl.LightningDataModule):
                 unzip_file(compressed_data_path, self.path,
                            msg="extracting data ...")
             else:
-                print("data already extracted !")
+                if self.verbose:
+                    print("data already extracted !")
                 # TODO: check data is correct
         else:
-            assert os.path.isdir(uncompressed_data_path), 'data not found'
+            assert os.path.isdir(self.uncompressed_data_path), 'data not found'
             # TODO: check data is correct
 
+    def generate_classes_list(self):
         # retrieve classes from folder structure
-        self.classes = sorted(os.listdir(uncompressed_data_path))
+        self.classes = sorted(os.listdir(self.uncompressed_data_path))
         assert len(self.classes) == self.num_classes
 
-        # generate list of images and labels
-        images, encoded = [], []
-        for ix, label in enumerate(self.classes):
-            _images = os.listdir(uncompressed_data_path / label)
-            images += [uncompressed_data_path /
-                       label / img for img in _images]
-            encoded += [ix]*len(_images)
-        if self.verbose:
-            print(f'Number of images: {len(images)}')
-
-        # data splits
-        test_size = int(len(images) * self.test_size)
-        val_size = int(len(images) * self.val_size)
-
-        train_images, self.test_images, train_labels, self.test_labels = train_test_split(
-            images,
-            encoded,
-            stratify=encoded,
-            test_size=test_size,
-            random_state=self.random_state
-        )
-
-        self.train_images, self.val_images, self.train_labels, self.val_labels = train_test_split(
-            train_images,
-            train_labels,
-            stratify=train_labels,
-            test_size=val_size,
-            random_state=self.random_state
-        )
-
-        if self.verbose:
-            print("training samples", len(self.train_images))
-            print("validation samples", len(self.val_images))
-            print("test samples", len(self.test_images))
+    # train_dataloader is required, the others are optional (but recommended!)
 
     def train_dataloader(self):
         return DataLoader(
-            self.train_ds,
+            self.ds,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
-            shuffle=self.shuffle
+            sampler=self.train_sampler
         )
 
     def val_dataloader(self):
         return DataLoader(
-            self.val_ds,
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
-            pin_memory=self.pin_memory,
-            shuffle=False
-        )
+                self.ds,
+                batch_size=self.batch_size,
+                num_workers=self.num_workers,
+                pin_memory=self.pin_memory,
+                sampler=self.val_sampler
+            ) if self.val_sampler else None
 
     def test_dataloader(self):
         return DataLoader(
-            self.test_ds,
+            self.ds,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
-            shuffle=False
-        )
+            sampler=self.test_sampler
+        ) if self.test_sampler else None

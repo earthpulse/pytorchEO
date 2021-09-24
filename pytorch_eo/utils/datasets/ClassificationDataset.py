@@ -20,13 +20,13 @@ class ClassificationDataset(Dataset):
         return (img / self.norm_value)
 
     def _trans_image(self, img):
-        if self.trans:  # albumentations
-            img_trans = self.trans(image=img)['image']
+        if self.trans:  
+            img_trans = self.trans(img)
             return img_trans
         return img
 
     def _to_tensor(self, img):
-        return torch.from_numpy(img).float().permute(2, 0, 1)
+        return img
 
     def __getitem__(self, ix):
         img = self._read_image(self.images[ix])
