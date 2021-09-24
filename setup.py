@@ -10,7 +10,7 @@ release = '21.9.24'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'it@earthpulse.es'
-url = 'https://earthpulse.ai'
+url = 'https://github.com/earthpulse/pytorch_eo'
 keywords = ['deep learning', 'earth observation',
             'neural networks', 'pytorch', 'pytorch lightning']
 
@@ -24,10 +24,12 @@ setuptools.setup(
     author_email=email,
     url=url,
     keywords=keywords,
-    # install_requires=[
-    #    'numpy',
-    #    'pandas',
-    # ],
+    install_requires=[
+        'pytorch',
+        'torchvision',
+        'pytorch_lightning',
+        'rasterio'
+    ],
     classifiers=[
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
         'Development Status :: 3 - Alpha',
