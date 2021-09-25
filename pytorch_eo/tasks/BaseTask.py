@@ -2,9 +2,10 @@ import torch
 import pytorch_lightning as pl
 import torchvision
 
+
 class BaseTask(pl.LightningModule):
 
-    def __init__(self, model, hparams=None, metrics = None):
+    def __init__(self, model, hparams=None, metrics=None):
         super().__init__()
         self.save_hyperparameters(hparams)
         self.configure_model(model)
@@ -14,7 +15,8 @@ class BaseTask(pl.LightningModule):
         if isinstance(model, str):
             if not 'model_params' in self.hparams:
                 self.hparams['model_params'] = {}
-            model = getattr(torchvision.models, model)(**self.hparams.model_params)
+            model = getattr(torchvision.models, model)(
+                **self.hparams.model_params)
         self.model = model
 
     def forward(self, x):
@@ -25,7 +27,8 @@ class BaseTask(pl.LightningModule):
         y_hat = self(x)
         loss = self.criterion(y_hat, y)
         if self.metrics is not None:
-            metrics = {metric_name: metric(y_hat, y) for metric_name, metric in self.metrics.items()}
+            metrics = {metric_name: metric(
+                y_hat, y) for metric_name, metric in self.metrics.items()}
             return loss, metrics
         return loss, {}
 
@@ -70,5 +73,5 @@ class BaseTask(pl.LightningModule):
     def configure_criterion(self):
         if not 'loss_params' in self.hparams:
             self.hparams['loss_params'] = {}
-        self.criterion = getattr(torch.nn, self.hparams.loss)(**self.hparams.loss_params)
-
+        self.criterion = getattr(torch.nn, self.hparams.loss)(
+            **self.hparams.loss_params)
