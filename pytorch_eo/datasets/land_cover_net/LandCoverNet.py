@@ -1,19 +1,12 @@
 import os
 import glob
 from pathlib import Path
-from pytorch_eo.utils.datasets.SBSegmentationDataset import SBSegmentationDataset
 import pandas as pd
-from ..S2Dataset import S2Dataset
-from ...utils.read_image import read_ms_image
 
-
-class Dataset(SBSegmentationDataset):
-
-    def __init__(self, images, masks, trans, bands, num_classes, norm_value):
-        super().__init__(images, masks, trans, bands, num_classes, norm_value)
-
-    def _read_mask(self, mask):
-        return read_ms_image(mask, 1).long().squeeze(0)  # H, W
+from ...utils.datasets.S2SBImageDataset import S2SBImageDataset
+from ...utils.datasets.ConcatDataset import ConcatDataset
+from ...utils.datasets.CategoricalImageDataset import CategoricalImageDataset
+from ..BaseDataset import BaseDataset
 
 
 class LandCoverNet(BaseDataset):
@@ -32,20 +25,19 @@ class LandCoverNet(BaseDataset):
                  compressed_labels_filename='ref_landcovernet_v1_labels.tar',
                  data_folder='ref_landcovernet_v1_source',
                  labels_folder='ref_landcovernet_v1_labels',
-                 train_sampler=None,
-                 test_sampler=None,
-                 val_sampler=None,
                  test_size=0.2,
                  val_size=0.2,
+                 train_trans=None,
+                 val_trans=None,
+                 test_trans=None,
                  num_workers=0,
                  pin_memory=False,
                  seed=42,
                  verbose=False,
-                 trans=None,
                  bands=None,
                  ):
-        super().__init__(batch_size, train_sampler, test_sampler, val_sampler,
-                         test_size, val_size, verbose, num_workers, pin_memory, seed)
+        super().__init__(batch_size, test_size, val_size,
+                         verbose, num_workers, pin_memory, seed)
         self.path = Path(path)
         self.compressed_data_filename = compressed_data_filename
         self.compressed_labels_filename = compressed_labels_filename
@@ -62,9 +54,10 @@ class LandCoverNet(BaseDataset):
             {'name': 'semi-natural-vegetation', 'color': '#00ff00'},
         ]
         self.num_classes = len(self.classes)
-        self.trans = trans
-        self.dataset = dataset
-        self.norm_value = norm_value
+        self.train_trans = train_trans
+        self.val_trans = val_trans
+        self.test_trans = test_trans
+        self.bands = bands
 
     def setup(self, stage=None):
 
@@ -93,19 +86,23 @@ class LandCoverNet(BaseDataset):
             assert os.path.isdir(image), f'image {image} not found'
             assert os.path.isfile(mask), f'mask {mask} not found'
 
-        if self.dataset:
-            self.ds = self.dataset(
-                images, masks, self.trans, self.bands, self.num_classes, self.norm_value)
-        else:
-            self.ds = Dataset(images, masks, self.trans,
-                              self.bands, self.num_classes, self.norm_value)
-
+        self.df = pd.DataFrame({'image': images, 'mask': masks})
         self.make_splits()
 
-    # def uncompress(self, compressed_data_filename, data_folder, msg):
-    #     compressed_data_path = self.path / compressed_data_filename
-    #     uncompressed_data_path = self.path / data_folder
-    #     if not os.path.isdir(uncompressed_data_path):
-    #         untar_file(compressed_data_path, self.path, msg=msg)
-    #     else:  # TODO: Validate data is correct
-    #         pass
+        self.train_ds = self.build_dataset(self.train_df, self.train_trans)
+        if self.test_size:
+            self.test_ds = self.build_dataset(self.test_df, self.test_trans)
+        if self.val_size:
+            self.val_ds = self.build_dataset(self.val_df, self.val_trans)
+
+    def build_dataset(self, df, trans):
+        images_ds = S2SBImageDataset(df.image.values, self.bands)
+        masks_ds = CategoricalImageDataset(
+            df['mask'].values, self.num_classes, 0)
+        assert len(images_ds) == len(
+            masks_ds), 'datasets should have same length'
+        return ConcatDataset(
+            {'image': images_ds},  # inputs
+            {'mask': masks_ds},  # outputs
+            trans  # transforms
+        )

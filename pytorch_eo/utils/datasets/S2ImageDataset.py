@@ -7,8 +7,8 @@ import numpy as np
 
 
 class S2ImageDataset(RasterioImageDataset):
-    def __init__(self, images, bands, norm_value=4000):
-        super().__init__(images, bands, norm_value)
+    def __init__(self, images, bands):
+        super().__init__(images, bands)
 
         # parse bands and compute number
         self.bands = bands
@@ -33,4 +33,3 @@ class S2ImageDataset(RasterioImageDataset):
         img_data = super().__getitem__(ix)
         # uin16 is not supported by pytorch
         return img_data.astype(np.float32)
-        # return torch.from_numpy(img_data.astype(np.float32) / self.norm_value).clip(0, 1)

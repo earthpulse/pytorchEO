@@ -1,4 +1,6 @@
 import torch
+import torch.nn.functional as F
+from einops import rearrange
 
 from pytorch_eo.metrics.segmentation import iou
 from ..BaseTask import BaseTask

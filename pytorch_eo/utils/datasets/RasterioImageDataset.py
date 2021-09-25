@@ -5,10 +5,9 @@ from torch.utils.data import Dataset
 
 
 class RasterioImageDataset(Dataset):
-    def __init__(self, images, bands, norm_value):
+    def __init__(self, images, bands):
         self.images = images
         self.bands = bands
-        self.norm_value = norm_value
 
     def __len__(self):
         return len(self.images)
