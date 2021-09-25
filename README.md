@@ -10,15 +10,6 @@ Deep Learning for Earth Observation applications and research.
 pip install pytorch-eo
 ```
 
-## Dependencies
-
-Pytorch EO is built on top of:
-
-- [Pytorch](https://pytorch.org/)
-- [Torchvision](https://pytorch.org/vision/stable/index.html)
-- [Pytorch-Lightning](https://www.pytorchlightning.ai/)
-- [Rasterio](https://rasterio.readthedocs.io/en/latest/)
-
 ## Examples
 
 Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples).
