@@ -24,7 +24,8 @@ setuptools.setup(
     author_email=email,
     url=url,
     keywords=keywords,
-    install_requires=['torch >= 1.4', 'torchvision', 'pytorch_lightning', 'rasterio'],
+    install_requires=['numpy', 'torch >= 1.4', 'torchvision', 'pytorch_lightning',
+                      'rasterio', 'scikit-image', 'scikit-learn', 'albumentations', 'einops', 'pandas'],
     python_requires='>=3.6',
     classifiers=[
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package

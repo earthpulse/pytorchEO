@@ -1,4 +1,3 @@
-import torchvision
 import rasterio
 from skimage import io
 from einops import rearrange

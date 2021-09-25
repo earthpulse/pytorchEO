@@ -16,7 +16,7 @@ class Dataset(SBSegmentationDataset):
         return read_ms_image(mask, 1).long().squeeze(0)  # H, W
 
 
-class LandCoverNet(S2Dataset):
+class LandCoverNet(BaseDataset):
 
     # THIS DATASET NEEDS TO BE DOWNLOADED THROUGH https://registry.mlhub.earth/10.34911/rdnt.d2ce8i/
     # CAN WE HAVE A PUBLIC LINK ?
@@ -42,12 +42,10 @@ class LandCoverNet(S2Dataset):
                  seed=42,
                  verbose=False,
                  trans=None,
-                 dataset=None,
                  bands=None,
-                 norm_value=4000
                  ):
         super().__init__(batch_size, train_sampler, test_sampler, val_sampler,
-                         test_size, val_size, verbose, num_workers, pin_memory, seed, bands)
+                         test_size, val_size, verbose, num_workers, pin_memory, seed)
         self.path = Path(path)
         self.compressed_data_filename = compressed_data_filename
         self.compressed_labels_filename = compressed_labels_filename
