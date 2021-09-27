@@ -1,6 +1,6 @@
 from .EuroSATBase import EuroSATBase
-from ...utils.datasets.S2ImageDataset import S2ImageDataset
-
+from ...utils.datasets.SensorImageDataset import SensorImageDataset
+from ...utils.sensors import Sensors
 
 class EuroSAT(EuroSATBase):
 
@@ -27,4 +27,4 @@ class EuroSAT(EuroSATBase):
         self.bands = bands
 
     def get_image_ds(self, images):
-        return S2ImageDataset(images, self.bands)
+        return SensorImageDataset(images, Sensors.S2, self.bands)

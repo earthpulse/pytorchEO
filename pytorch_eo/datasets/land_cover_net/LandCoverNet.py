@@ -3,7 +3,8 @@ import glob
 from pathlib import Path
 import pandas as pd
 
-from ...utils.datasets.S2SBImageDataset import S2SBImageDataset
+from ...utils.datasets.SingleBandImageDataset import SingleBandImageDataset
+from ...utils.sensors import Sensors
 from ...utils.datasets.ConcatDataset import ConcatDataset
 from ...utils.datasets.CategoricalImageDataset import CategoricalImageDataset
 from ..BaseDataset import BaseDataset
@@ -96,7 +97,7 @@ class LandCoverNet(BaseDataset):
             self.val_ds = self.build_dataset(self.val_df, self.val_trans)
 
     def build_dataset(self, df, trans):
-        images_ds = S2SBImageDataset(df.image.values, self.bands)
+        images_ds = SingleBandImageDataset(df.image.values, Sensors.S2, self.bands)
         masks_ds = CategoricalImageDataset(
             df['mask'].values, self.num_classes, 0)
         assert len(images_ds) == len(

@@ -1,26 +1,30 @@
+from numpy.lib.arraysetops import isin
 from .RasterioImageDataset import RasterioImageDataset
-from ..sensors import S2, bands2values
-import torch
+from ...utils.sensors import sensors, Sensors
+from ...utils.sensors.utils import bands2values
 import numpy as np
 
-# load S2 images with rasterio
+# load tif images with rasterio
 
 
-class S2ImageDataset(RasterioImageDataset):
-    def __init__(self, images, bands):
+class SensorImageDataset(RasterioImageDataset):
+    def __init__(self, images, sensor, bands):
         super().__init__(images, bands)
+
+        assert isinstance(sensor, Sensors), 'invalid sensor'
+        sensor = getattr(sensors, sensor.value)
 
         # parse bands and compute number
         self.bands = bands
         if bands is None:
-            self.bands = S2.ALL
+            self.bands = sensor.ALL
 
         if isinstance(self.bands, list):
             self.in_chans = len(bands)
             for band in self.bands:
-                assert band in S2, 'invalid band'
+                assert band in sensor, 'invalid band'
         else:
-            assert self.bands in S2, 'invalid band'
+            assert self.bands in sensor, 'invalid band'
             if isinstance(self.bands.value, list):
                 self.in_chans = len(self.bands.value)
             else:
