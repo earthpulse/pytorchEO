@@ -24,16 +24,23 @@ class BaseTask(pl.LightningModule):
 
     def forward(self, x):
         return self.model(x)
-
+        
     def compute_loss(self, y_hat, y):
-        pass
+        return self.loss_fn(y_hat, y)
 
     def compute_metrics(self, y_hat, y):
-        pass
+        return {metric_name: metric(y_hat, y) for metric_name, metric in self.metrics.items()}
+
+    def my_prepare_data(self, batch, keys=None): # prepare_data already used py pl
+        # dict to tuple, in the order given by keys
+        # we could keep the dict, but torchscript cannot index dicts
+        keys = self.inputs if keys is None else keys
+        x = tuple([batch[k] for k in keys])
+        return x[0] if len(x) == 1 else x
 
     def step(self, batch):
-        x = {k: v for k, v in batch.items() if k in self.inputs}
-        y = {k: v for k, v in batch.items() if k in self.outputs}
+        x = self.my_prepare_data(batch, self.inputs)
+        y = self.my_prepare_data(batch, self.outputs)
         y_hat = self(x)
         loss = self.compute_loss(y_hat, y)
         if self.metrics is not None:

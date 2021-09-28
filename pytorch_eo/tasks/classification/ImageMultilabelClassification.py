@@ -14,15 +14,9 @@ class ImageMultilabelClassification(BaseTask):
 
         super().__init__(model, hparams, inputs, outputs, loss_fn, metrics)
 
-    def compute_loss(self, y_hat, y):
-        return self.loss_fn(y_hat, y['labels'])
-
-    def compute_metrics(self, y_hat, y):
-        return {metric_name: metric(y_hat, y['labels']) for metric_name, metric in self.metrics.items()}
-
     def predict(self, batch):
         self.eval()
         with torch.no_grad():
-            x = {k: v.to(self.device) for k, v in batch.items() if k in self.inputs}
+            x = self.my_prepare_data(batch)
             y_hat = self(x)
             return torch.softmax(y_hat, axis=1)
