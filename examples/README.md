@@ -32,7 +32,7 @@ Data fusion is a technique that consists on leveraging multiple data sources at 
 
 Self-Supervised Learning is a technique that consists on training a model without labels.
 
-- EuroSAT [transfer learning]((./eurosat_ssl.ipynb)) with SSL pre-trained model: In this example we show how to train a model using an SSL pre-trained model from our Models Universe.
+- EuroSAT [transfer learning](./eurosat_ssl.ipynb) with SSL pre-trained model: In this example we show how to train a model using an SSL pre-trained model from our Models Universe.
 
 ## Coming soon ...
 
