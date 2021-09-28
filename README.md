@@ -17,7 +17,8 @@ Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree
 ### Ready to use Datasets
 
 - [EuroSAT](https://github.com/phelber/EuroSAT)
-- [LandCoverNet](https://mlhub.earth/10.34911/rdnt.d2ce8i)
+- [BigEarthNet](https://mlhub.earth/10.34911/rdnt.d2ce8i)
+- [LandCoverNet](http://bigearth.net/)
 
 <!-- ### Build your own Datasets
 

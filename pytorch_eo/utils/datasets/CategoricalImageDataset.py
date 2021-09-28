@@ -19,4 +19,4 @@ class CategoricalImageDataset(Dataset):
             img = img[..., self.chan]
         oh = (np.arange(self.num_classes) ==
               img[..., None]).astype(np.float32)  # one hot encoding
-        return rearrange(oh, 'h w c -> c h w')
+        return oh # H, W, C

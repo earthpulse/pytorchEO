@@ -97,13 +97,7 @@ class LandCoverNet(BaseDataset):
             self.val_ds = self.build_dataset(self.val_df, self.val_trans)
 
     def build_dataset(self, df, trans):
-        images_ds = SingleBandImageDataset(df.image.values, Sensors.S2, self.bands)
-        masks_ds = CategoricalImageDataset(
-            df['mask'].values, self.num_classes, 0)
-        assert len(images_ds) == len(
-            masks_ds), 'datasets should have same length'
-        return ConcatDataset(
-            {'image': images_ds},  # inputs
-            {'mask': masks_ds},  # outputs
-            trans  # transforms
-        )
+        return ConcatDataset({
+            'image': SingleBandImageDataset(df.image.values, Sensors.S2, self.bands),
+            'mask': CategoricalImageDataset(df['mask'].values, self.num_classes, 0)
+        }, trans)

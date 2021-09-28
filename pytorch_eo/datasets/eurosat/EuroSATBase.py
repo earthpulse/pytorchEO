@@ -53,11 +53,7 @@ class EuroSATBase(BaseDataset):
         labels_ds = df.label.values
         assert len(images_ds) == len(
             labels_ds), 'datasets should have same length'
-        return ConcatDataset(
-            {'image': images_ds},  # inputs
-            {'label': labels_ds},  # outputs
-            trans  # transforms
-        )
+        return ConcatDataset({'image': images_ds, 'label': labels_ds}, trans)
 
     def build_datasets(self):
         self.train_ds = self.build_dataset(self.train_df, self.train_trans)

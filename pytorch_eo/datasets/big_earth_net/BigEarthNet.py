@@ -7,16 +7,20 @@ from .utils import *
 from ...utils.datasets.SingleBandImageDataset import SingleBandImageDataset
 from ...utils.sensors import Sensors, S1
 from ...utils.datasets.ConcatDataset import ConcatDataset
+from ...utils.datasets.ArrayDataset import ArrayDataset
 from pathlib import Path
+import torch 
 
 class BigEarthNet(BaseDataset):
 
     # THIS DATASET NEEDS TO BE DOWNLOADED THROUGH http://bigearth.net/
 
+    # TODO: filter clouds, snow
+
 
     def __init__(self,
                 batch_size,
-                path='data/BigEarthNet/BigEarthNet-S1-v1.0',
+                path='data/BigEarthNet',
                 s1_folder='BigEarthNet-S1-v1.0',
                 s2_folder='BigEarthNet-v1.0',
                 test_size=0.2,
@@ -30,7 +34,11 @@ class BigEarthNet(BaseDataset):
                 verbose=False,
                 bands={Sensors.S1: [S1.VV, S1.VH]},
                 label_groups=None,
-                processed_data_path='data/BigEarthNet'
+                processed_data_path='data/BigEarthNet',
+                filter_clouds=False,
+                filter_snow=False,
+                clouds_file_name='patches_with_cloud_and_shadow.csv',
+                snow_file_name='patches_with_seasonal_snow.csv'
                 ):
         super().__init__(batch_size, test_size, val_size,
                             verbose, num_workers, pin_memory, seed)
@@ -48,6 +56,10 @@ class BigEarthNet(BaseDataset):
         self.test_trans = test_trans
         self.label_groups = label_groups
         self.processed_data_path = Path(processed_data_path)
+        self.filter_clouds = filter_clouds
+        self.filter_snow = filter_snow
+        self.clouds_file_name = Path(clouds_file_name)
+        self.snow_file_name = Path(snow_file_name)
 
         assert isinstance(self.sensors, list), 'sensors should be a list'
         self.sensors = set(self.sensors) # remove duplicates
@@ -90,7 +102,6 @@ class BigEarthNet(BaseDataset):
             patches_folders = data['s2_images']
             path = s2_path
         labels, s2_patches = [], []
-        count = 0
         for folder in tqdm(patches_folders):
             with open(path / folder / f'{folder}_labels_metadata.json') as f:
                 metadata = json.load(f)
@@ -103,9 +114,6 @@ class BigEarthNet(BaseDataset):
                         assert all(label in s2_metadata['labels']
                                 for label in metadata['labels'])
                     s2_patches.append(s2_image)
-            count += 1
-            if count >= 100:
-                break
         data.update({'labels': labels})
         if len(self.sensors) > 1:
             data['s2_images'] = s2_patches
@@ -121,10 +129,8 @@ class BigEarthNet(BaseDataset):
             data['encoded_labels'] = encode_labels(
                 data['labels'], LABELS)
 
-        print(len(data['s1_images']))
-
         self.df = pd.DataFrame({
-            k: v[:100] for k, v in data.items()
+            k: v for k, v in data.items()
         })
 
         # generate full image paths
@@ -160,6 +166,16 @@ class BigEarthNet(BaseDataset):
         self.df = pd.read_json(
             self.processed_data_path / file_name)
 
+        # drop clouds and snow
+        if self.filter_clouds and Sensors.S2 in self.sensors:
+            clouds = pd.read_csv(self.path / self.clouds_file_name, header=None)
+            self.df = self.df[~self.df.s2_images.apply(lambda x: x.split('/')[-1]).isin(clouds[0].values)]
+
+        if self.filter_snow:
+            snow = pd.read_csv(self.path / self.snow_file_name, header=None)
+            self.df = self.df[~self.df.s2_images.apply(lambda x: x.split('/')[-1]).isin(snow[0].values)]
+
+
         self.make_splits()
 
         self.train_ds = self.build_dataset(self.train_df, self.train_trans)
@@ -169,14 +185,14 @@ class BigEarthNet(BaseDataset):
             self.val_ds = self.build_dataset(self.val_df, self.val_trans)
 
     def build_dataset(self, df, trans):
-        images_ds = {}
-        if Sensors.S1 in self.sensors:
-            images_ds .update({'image': SingleBandImageDataset(df.s1_images.values, Sensors.S1, self.bands[Sensors.S1], prefix=[img.split('/')[-1] + '_' for img in df.s1_images.values])})
-        if Sensors.S2 in self.sensors:
-            images_ds .update({'image': SingleBandImageDataset(df.s2_images.values, Sensors.S2, self.bands[Sensors.S2], prefix=[img.split('/')[-1] + '_' for img in df.s2_images.values])})
-        labels_ds = df.encoded_labels.values
-        return ConcatDataset(
-            images_ds,  # inputs
-            {'labels': labels_ds},  # outputs
-            trans  # transforms
-        )
+        if Sensors.S1 in self.sensors and len(self.sensors) == 1:
+            data = {'image': SingleBandImageDataset(df.s1_images.values, Sensors.S1, self.bands[Sensors.S1], prefix=[img.split('/')[-1] + '_' for img in df.s1_images.values])}
+        elif Sensors.S2 in self.sensors and len(self.sensors) == 1:
+            data  = {'image': SingleBandImageDataset(df.s2_images.values, Sensors.S2, self.bands[Sensors.S2], prefix=[img.split('/')[-1] + '_' for img in df.s2_images.values])}
+        else:
+            data = {
+                Sensors.S1.value: SingleBandImageDataset(df.s1_images.values, Sensors.S1, self.bands[Sensors.S1], prefix=[img.split('/')[-1] + '_' for img in df.s1_images.values]),
+                Sensors.S2.value: SingleBandImageDataset(df.s2_images.values, Sensors.S2, self.bands[Sensors.S2], prefix=[img.split('/')[-1] + '_' for img in df.s2_images.values])
+            }
+        data.update({'labels': ArrayDataset(df.encoded_labels.values, dtype=torch.float)})
+        return ConcatDataset(data, trans)

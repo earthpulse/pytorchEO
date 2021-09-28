@@ -1,1 +1,2 @@
 from .ImageClassification import ImageClassification
+from .ImageMultilabelClassification import ImageMultilabelClassification

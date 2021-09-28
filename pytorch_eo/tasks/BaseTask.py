@@ -5,11 +5,14 @@ import torchvision
 
 class BaseTask(pl.LightningModule):
 
-    def __init__(self, model, hparams=None, metrics=None):
+    def __init__(self, model, hparams, inputs, outputs, loss_fn, metrics=None):
         super().__init__()
         self.save_hyperparameters(hparams)
         self.configure_model(model)
         self.metrics = metrics
+        self.inputs = inputs 
+        self.outputs = outputs
+        self.loss_fn = loss_fn
 
     def configure_model(self, model):
         if isinstance(model, str):
@@ -22,13 +25,19 @@ class BaseTask(pl.LightningModule):
     def forward(self, x):
         return self.model(x)
 
+    def compute_loss(self, y_hat, y):
+        pass
+
+    def compute_metrics(self, y_hat, y):
+        pass
+
     def step(self, batch):
-        x, y = batch
+        x = {k: v for k, v in batch.items() if k in self.inputs}
+        y = {k: v for k, v in batch.items() if k in self.outputs}
         y_hat = self(x)
-        loss = self.criterion(y_hat, y)
+        loss = self.compute_loss(y_hat, y)
         if self.metrics is not None:
-            metrics = {metric_name: metric(
-                y_hat, y) for metric_name, metric in self.metrics.items()}
+            metrics = self.compute_metrics(y_hat, y)
             return loss, metrics
         return loss, {}
 
@@ -57,7 +66,6 @@ class BaseTask(pl.LightningModule):
             return self(x.to(self.device))
 
     def configure_optimizers(self):
-        self.configure_criterion()
         if not 'optim_params' in self.hparams:
             self.hparams['optim_params'] = {}
         optimizer = getattr(torch.optim, self.hparams.optimizer)(
@@ -70,8 +78,3 @@ class BaseTask(pl.LightningModule):
             return [optimizer], schedulers
         return optimizer
 
-    def configure_criterion(self):
-        if not 'loss_params' in self.hparams:
-            self.hparams['loss_params'] = {}
-        self.criterion = getattr(torch.nn, self.hparams.loss)(
-            **self.hparams.loss_params)
