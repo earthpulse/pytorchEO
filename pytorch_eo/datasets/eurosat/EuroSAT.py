@@ -17,10 +17,11 @@ class EuroSAT(EuroSATBase):
                  pin_memory=False,
                  seed=42,
                  verbose=False,
-                 bands=None
+                 bands=None,
+                 label_ratio=1,
                  ):
         super().__init__(batch_size, download, path, test_size, val_size, train_trans,
-                         val_trans, test_trans, num_workers, pin_memory, seed, verbose)
+                         val_trans, test_trans, num_workers, pin_memory, seed, verbose, label_ratio)
         self.url = "http://madm.dfki.de/files/sentinel/EuroSATallBands.zip"
         self.compressed_data_filename = 'EuroSATallBands.zip'
         self.data_folder = 'ds/images/remote_sensing/otherDatasets/sentinel_2/tif'

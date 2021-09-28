@@ -16,10 +16,11 @@ class EuroSATRGB(EuroSATBase):
                  num_workers=0,
                  pin_memory=False,
                  seed=42,
-                 verbose=False
+                 verbose=False,
+                 label_ratio=1,
                  ):
         super().__init__(batch_size, download, path, test_size, val_size, train_trans,
-                         val_trans, test_trans, num_workers, pin_memory, seed, verbose)
+                         val_trans, test_trans, num_workers, pin_memory, seed, verbose, label_ratio)
         self.url = "http://madm.dfki.de/files/sentinel/EuroSAT.zip"
         self.compressed_data_filename = 'EuroSAT.zip'
         self.data_folder = '2750'
