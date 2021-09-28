@@ -20,8 +20,8 @@ class LandCoverNet(BaseDataset):
     # in the future we will make datasets with time series
 
     def __init__(self,
-                 batch_size,
-                 path='/data',
+                 batch_size=32,
+                 path='data/LandCoverNet',
                  compressed_data_filename='ref_landcovernet_v1_source.tar',
                  compressed_labels_filename='ref_landcovernet_v1_labels.tar',
                  data_folder='ref_landcovernet_v1_source',

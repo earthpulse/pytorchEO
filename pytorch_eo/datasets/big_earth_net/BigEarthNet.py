@@ -19,7 +19,7 @@ class BigEarthNet(BaseDataset):
 
 
     def __init__(self,
-                batch_size,
+                batch_size=32,
                 path='data/BigEarthNet',
                 s1_folder='BigEarthNet-S1-v1.0',
                 s2_folder='BigEarthNet-v1.0',
@@ -195,4 +195,4 @@ class BigEarthNet(BaseDataset):
                 Sensors.S2.value: SingleBandImageDataset(df.s2_images.values, Sensors.S2, self.bands[Sensors.S2], prefix=[img.split('/')[-1] + '_' for img in df.s2_images.values])
             }
         data.update({'labels': ArrayDataset(df.encoded_labels.values, dtype=torch.float)})
-        return ConcatDataset(data, trans)
+        return ConcatDataset(data, trans, image_field='S1' if len(self.sensors) > 1 else 'image')

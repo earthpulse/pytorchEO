@@ -22,25 +22,29 @@
 #     return tensor_orig.view(-1, output_h, output_w)[:, pad_h1:-pad_h2, pad_w1:-pad_w2]
 
 import torch
-
+import numpy as np
 
 def contrast_stretch(data, in_range, out_range, clip):
     lower_bound_in, upper_bound_in = in_range
     lower_bound_out, upper_bound_out = out_range
 
-    #out_data = data.astype('float64', copy=True)
-    out_data = data.float().clone()
+    if isinstance(data, np.ndarray):
+        out_data = data.astype('float64', copy=True)
+    else: # torch tensor
+        out_data = data.float().clone()
     out_data -= lower_bound_in
     norm = upper_bound_in - lower_bound_in
     if abs(norm) > 1e-8:  # prevent division by 0
         out_data *= (upper_bound_out - lower_bound_out) / norm
     out_data += lower_bound_out
     if clip:
-        torch.clip(out_data, lower_bound_out, upper_bound_out, out=out_data)
+        out_data = out_data.clip(lower_bound_out, upper_bound_out)
     return out_data
 
 
 def to_uint8(data, lower_bound, upper_bound):
     rescaled = contrast_stretch(
         data, (lower_bound, upper_bound), (0, 255), clip=True)
+    if isinstance(rescaled, np.ndarray):
+        return rescaled.astype(np.uint8)
     return rescaled.type(torch.uint8)
