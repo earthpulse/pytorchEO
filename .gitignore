@@ -10,3 +10,4 @@ tutorials/data
 *.pth
 *.ckpt
 lightning_logs
+challenges/*/data
