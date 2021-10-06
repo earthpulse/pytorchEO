@@ -20,6 +20,12 @@ Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree
 - [BigEarthNet](https://mlhub.earth/10.34911/rdnt.d2ce8i)
 - [LandCoverNet](http://bigearth.net/)
 
+## Challenges
+
+PytorchEO has been used in the following challenges:
+
+- [EUROAVIA](./challenges/euroavia_hackathon_21) Mission: European Students Space Hackathon, 2021.
+
 <!-- ### Build your own Datasets
 
 Using SCAN you can annotate your own data and access it directly through Pytorch EO. -->
