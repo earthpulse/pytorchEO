@@ -16,7 +16,7 @@ class ImageSegmentation(BaseTask):
         metrics = {'iou': iou} if metrics is None else metrics
 
         super().__init__(model, hparams, inputs, outputs, loss_fn, metrics)
-        
+
     def predict(self, batch):
         self.eval()
         with torch.no_grad():

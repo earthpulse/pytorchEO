@@ -1,5 +1,5 @@
 from pathlib import Path
-import numpy as np 
+import numpy as np
 
 from .utils import *
 from ..BaseDataset import BaseDataset
@@ -49,7 +49,7 @@ class EuroSATBase(BaseDataset):
         assert len(self.classes) == self.num_classes
         self.df = generate_df(
             self.classes, uncompressed_data_path, self.verbose)
-        
+
         self.make_splits(stratify="label")
 
         # filter by label ratio
@@ -68,9 +68,11 @@ class EuroSATBase(BaseDataset):
                                        [ratio_ixs]).tolist()
                 train_labels_ratio += (np.array(train_labels)
                                        [ratio_ixs]).tolist()
-            self.train_df = pd.DataFrame({'image': train_images_ratio, 'label': train_labels_ratio})
+            self.train_df = pd.DataFrame(
+                {'image': train_images_ratio, 'label': train_labels_ratio})
             if self.verbose:
-                print("training samples after label ratio filtering:", len(self.train_df))
+                print("training samples after label ratio filtering:",
+                      len(self.train_df))
 
         self.build_datasets()
 
@@ -80,10 +82,3 @@ class EuroSATBase(BaseDataset):
         assert len(images_ds) == len(
             labels_ds), 'datasets should have same length'
         return ConcatDataset({'image': images_ds, 'label': labels_ds}, trans)
-
-    def build_datasets(self):
-        self.train_ds = self.build_dataset(self.train_df, self.train_trans)
-        if self.test_size:
-            self.test_ds = self.build_dataset(self.test_df, self.test_trans)
-        if self.val_size:
-            self.val_ds = self.build_dataset(self.val_df, self.val_trans)

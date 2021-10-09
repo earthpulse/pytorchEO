@@ -19,13 +19,14 @@ def read_ms_image(src, bands):
 # file name should be {BAND}.tif
 
 
-def read_sb_image(src, bands, prefix=None, ext='.tif'):
+def read_sb_image(src, bands, prefix=None, ext='.tif', lowercase=False):
     bands_data = []
     file_name = src + '/'
     if prefix is not None:
         file_name += prefix
     if len(bands) > 1:
         for band in bands:
+            band = band.lower() if lowercase else band
             band = read_ms_image(file_name + band + ext, 1)  # H, W
             bands_data.append(band)
         return np.stack(bands_data)  # C, H, W

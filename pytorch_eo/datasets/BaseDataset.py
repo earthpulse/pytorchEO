@@ -51,6 +51,14 @@ class BaseDataset(pl.LightningDataModule):
             if self.test_size:
                 print("test samples", len(self.test_df))
 
+    def build_datasets(self):
+        self.train_ds = self.build_dataset(self.train_df, self.train_trans)
+        self.val_ds, self.test_ds = None, None
+        if self.test_size:
+            self.test_ds = self.build_dataset(self.test_df, self.test_trans)
+        if self.val_size:
+            self.val_ds = self.build_dataset(self.val_df, self.val_trans)
+
     def get_dataloader(self, ds, shuffle=False, batch_size=None):
         return DataLoader(
             ds,
@@ -66,7 +74,7 @@ class BaseDataset(pl.LightningDataModule):
         return self.get_dataloader(self.train_ds, shuffle, batch_size=batch_size)
 
     def val_dataloader(self, shuffle=False, batch_size=None):
-        return self.get_dataloader(self.val_ds, shuffle, batch_size=batch_size) if self.val_ds else None
+        return self.get_dataloader(self.val_ds, shuffle, batch_size=batch_size) if self.val_ds is not None else None
 
     def test_dataloader(self, shuffle=False, batch_size=None):
-        return self.get_dataloader(self.test_ds, shuffle, batch_size=batch_size) if self.test_ds else None
+        return self.get_dataloader(self.test_ds, shuffle, batch_size=batch_size) if self.test_ds is not None else None

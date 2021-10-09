@@ -90,11 +90,7 @@ class LandCoverNet(BaseDataset):
         self.df = pd.DataFrame({'image': images, 'mask': masks})
         self.make_splits()
 
-        self.train_ds = self.build_dataset(self.train_df, self.train_trans)
-        if self.test_size:
-            self.test_ds = self.build_dataset(self.test_df, self.test_trans)
-        if self.val_size:
-            self.val_ds = self.build_dataset(self.val_df, self.val_trans)
+        self.build_datasets()
 
     def build_dataset(self, df, trans):
         return ConcatDataset({

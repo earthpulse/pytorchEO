@@ -16,7 +16,7 @@ class CategoricalImageDataset(Dataset):
     def __getitem__(self, ix):
         img = read_image(self.images[ix])  # (H, W, C), np
         if img.ndim == 3:
-            img = img[..., self.chan]
+            img = img[..., self.chan]  # H, W
         oh = (np.arange(self.num_classes) ==
               img[..., None]).astype(np.float32)  # one hot encoding
-        return oh # H, W, C
+        return oh  # H, W, C
