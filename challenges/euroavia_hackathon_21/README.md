@@ -2,6 +2,6 @@ Here you will find valuable resources for the DL4EO challenge proposed at the Eu
 
 - Get started with this [baseline](./baseline.ipynb).
 - Find the slides [here](./euroavia'21.pdf)
-- 98% acc [solution](./solution.ipynb)
+- +98% acc [solution](./solution.ipynb)
 
 From there, check our [examples](../../examples) to improve your solution.
