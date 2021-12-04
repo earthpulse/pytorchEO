@@ -25,6 +25,7 @@ Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree
 PytorchEO has been used in the following challenges:
 
 - [EUROAVIA](./challenges/euroavia_hackathon_21) Mission: European Students Space Hackathon, 2021.
+- [On Cloud N](./challenges/OnCloudN): Cloud Cover Detection ChallengeCloud Cover Detection Challenge (DrivenData, 2021).
 
 <!-- ### Build your own Datasets
 
