@@ -17,7 +17,8 @@ import json
 import rasterio
 import geopandas as gpd
 import rasterio.features
-from ..config import SCAN_URL, SPAI_URL
+from ..config import SCAN_URL, retrieve_credentials
+from pathlib import Path
 
 
 class SCANDataset(BaseDataset):
@@ -51,18 +52,24 @@ class SCANDataset(BaseDataset):
     def setup(self, stage=None):
         super().setup(stage)
 
+        # get credentials
+        creds = retrieve_credentials()
+
         # call SCAN api to get the basic dataset info
-        info_path = self.path / 'info.json'
+        info_path = Path.home() / f'.ep/{self.dataset}.json'
         try:
             with open(info_path) as json_file:
                 self.info = json.load(json_file)
             if self.verbose:
-                print("found info.json")
+                print(f"found {self.dataset}.json")
         except:
             if self.verbose:
                 print("query scan api")
-            self.info = requests.get(
-                f'{SCAN_URL}/dataset/{self.dataset}').json()
+            res = requests.get(
+                f'{SCAN_URL}/dataset/{self.dataset}', headers={'Authorization': 'Bearer ' + creds['id_token']})
+            if res.status_code != 200:
+                raise Exception(f"Error: {res.status_code} - {res.json()}")
+            self.info = res.json()
             with open(info_path, 'w') as outfile:
                 json.dump(self.info, outfile)
         self.num_classes = len(self.info['labels'])
@@ -71,23 +78,21 @@ class SCANDataset(BaseDataset):
         # download images and annotations from SPAI
         # TODO: can we do this better ? (stream one zip file?)
         if self.download:
-            # get a valid token
-            token = requests.get(f'{SCAN_URL}/token').json()['token']
             os.makedirs(self.path, exist_ok=True)
             if self.verbose:
                 print("downloading data")
             for image in tqdm(self.info['images']):
                 # image
-                url = f"{SPAI_URL}/images/{image['id']}?datastore={self.info['id']}"
+                url = f"{SCAN_URL}/images/{image['id']}"
                 response = requests.get(
-                    url, headers={'Authorization': 'Bearer ' + token}, stream=True)
+                    url, headers={'Authorization': 'Bearer ' + creds['id_token']}, stream=True)
                 with open(f'{self.path}/{image["id"]}.tif', 'wb') as out_file:
                     shutil.copyfileobj(response.raw, out_file)
                 del response
                 # annotations
-                url = f"{SPAI_URL}/images/{image['id']}/meta?datastore={self.info['id']}&name=annotations"
+                url = f"{SCAN_URL}/annotations/{image['id']}"
                 response = requests.get(
-                    url, headers={'Authorization': 'Bearer ' + token}, stream=True)
+                    url, headers={'Authorization': 'Bearer ' + creds['id_token']}, stream=True)
                 with open(f'{self.path}/{image["id"]}.geojson', 'wb') as out_file:
                     shutil.copyfileobj(response.raw, out_file)
                 del response
@@ -96,7 +101,7 @@ class SCANDataset(BaseDataset):
             for image in tqdm(self.info['images']):
                 ds = rasterio.open(f'{self.path}/{image["id"]}.tif')
                 annotations = gpd.read_file(
-                    f'{self.path}/{image["id"]}.geojson')
+                    f'{self.path}/{image["id"]}.geojson').to_crs(ds.crs)
                 mask = np.zeros(
                     (*ds.shape, len(self.info['labels'])))
                 mask[..., -1] = 1
