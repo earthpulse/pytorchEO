@@ -5,8 +5,8 @@ import setuptools
 #cmdclass = {'build_sphinx': BuildDoc}
 
 name = 'pytorch_eo'
-version = '22.02'
-release = '22.02.25'
+version = '22.06'
+release = '22.06.17'
 author = 'earthpulse'
 description = 'DL4EO'
 email = 'it@earthpulse.es'
@@ -25,7 +25,7 @@ setuptools.setup(
     url=url,
     keywords=keywords,
     install_requires=['numpy', 'torch >= 1.4', 'torchvision', 'pytorch_lightning',
-                      'rasterio', 'scikit-image', 'scikit-learn', 'albumentations', 'einops', 'pandas'],
+                      'rasterio', 'scikit-image', 'scikit-learn', 'albumentations', 'einops', 'pandas', 'geopandas'],
     python_requires='>=3.6',
     classifiers=[
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
@@ -41,11 +41,4 @@ setuptools.setup(
     ],
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    # cmdclass=cmdclass,
-    # command_options={
-    #     'build_sphinx': {
-    #         'project': ('setup.py', name),
-    #         'version': ('setup.py', version),
-    #         'release': ('setup.py', release),
-    #         'source_dir': ('setup.py', 'sphinx/source')}}
 )

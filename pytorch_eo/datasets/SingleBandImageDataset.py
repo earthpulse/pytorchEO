@@ -1,6 +1,6 @@
 from .SensorImageDataset import SensorImageDataset
-from ..read_image import read_sb_image
-from ..sensors.utils import bands2names
+from pytorch_eo.utils import read_sb_image
+from pytorch_eo.datasets.sensors import bands2names
 from einops import rearrange
 import numpy as np
 

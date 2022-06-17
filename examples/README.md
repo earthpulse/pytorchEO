@@ -9,12 +9,11 @@ The task of image classification consists on assigning one label to an image.
 - [EuroSAT](./eurosat.ipynb): Get started with this simple example.
 - EuroSAT [advanced](./eurosat_advanced.ipynb): Learn how to leverage the power of Pytorch EO in this advanced example covering topics such as data augmentation, hyperparameter optimization, etc.
 
-## Image Multi-label Classification
+<!-- ## Image Multi-label Classification
 
 The task of image multi-label classification consists on assigning multiple labels to an image.
 
-- [BigEarthNet](./big_earth_net.ipynb): Train an image classifier for a multi-label task.
-
+- [BigEarthNet](./big_earth_net.ipynb): Train an image classifier for a multi-label task. -->
 
 ## Image Segmentation
 
@@ -22,7 +21,7 @@ The task of image segmentation consists on assigning one label to each pixel of 
 
 - [LandCoverNet](./land_cover_net.ipynb): Learn how to train a model for image segmentation.
 
-## Data Fusion
+<!-- ## Data Fusion
 
 Data fusion is a technique that consists on leveraging multiple data sources at the same time to solve a task.
 
@@ -32,7 +31,7 @@ Data fusion is a technique that consists on leveraging multiple data sources at 
 
 Self-Supervised Learning is a technique that consists on training a model without labels.
 
-- EuroSAT [transfer learning](./eurosat_ssl.ipynb) with SSL pre-trained model: In this example we show how to train a model using an SSL pre-trained model from our Models Universe.
+- EuroSAT [transfer learning](./eurosat_ssl.ipynb) with SSL pre-trained model: In this example we show how to train a model using an SSL pre-trained model from our Models Universe. -->
 
 ## Coming soon ...
 
@@ -44,5 +43,5 @@ Self-Supervised Learning is a technique that consists on training a model withou
 - Integrations (models universe, SCAN, SPAI)
 - Research (custom datasets, custom tasks)
 - Production (export models, upload to universe, access through SPAI)
-- Challenges 
+- Challenges
 - AutoML: NAS, HPO
