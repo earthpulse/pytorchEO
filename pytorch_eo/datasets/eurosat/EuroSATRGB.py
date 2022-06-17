@@ -1,5 +1,5 @@
 from .EuroSATBase import EuroSATBase
-from ...utils.datasets.RGBImageDataset import RGBImageDataset
+from pytorch_eo.datasets import RGBImageDataset
 
 
 class EuroSATRGB(EuroSATBase):
@@ -26,5 +26,5 @@ class EuroSATRGB(EuroSATBase):
         self.data_folder = '2750'
         self.in_chans = 3
 
-    def get_image_ds(self, images):
+    def get_image_dataset(self, images):
         return RGBImageDataset(images)

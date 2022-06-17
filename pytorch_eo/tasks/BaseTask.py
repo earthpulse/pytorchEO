@@ -5,7 +5,7 @@ import torchvision
 
 class BaseTask(pl.LightningModule):
 
-    def __init__(self, model, hparams, inputs, outputs, loss_fn, metrics=None):
+    def __init__(self, model, hparams=None, inputs=None, outputs=None, loss_fn=None, metrics=None):
         super().__init__()
         self.save_hyperparameters(hparams)
         self.configure_model(model)
@@ -16,10 +16,10 @@ class BaseTask(pl.LightningModule):
 
     def configure_model(self, model):
         if isinstance(model, str):
-            if not 'model_params' in self.hparams:
-                self.hparams['model_params'] = {}
+            if not 'model' in self.hparams:
+                self.hparams['model'] = {}
             model = getattr(torchvision.models, model)(
-                **self.hparams.model_params)
+                **self.hparams.model)
         self.model = model
 
     def forward(self, x):

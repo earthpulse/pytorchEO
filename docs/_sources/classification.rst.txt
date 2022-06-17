@@ -1,8 +1,0 @@
-classification
-===================
-
-ImageClassifier
-----------------
-.. automodule:: pytorch_eo.tasks.classification.ImageClassifier
-   :members:
-            

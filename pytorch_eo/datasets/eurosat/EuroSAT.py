@@ -1,6 +1,6 @@
 from .EuroSATBase import EuroSATBase
-from ...utils.datasets.SensorImageDataset import SensorImageDataset
-from ...utils.sensors import Sensors
+from pytorch_eo.datasets import SensorImageDataset
+from pytorch_eo.datasets.sensors import Sensors
 
 class EuroSAT(EuroSATBase):
 
@@ -27,5 +27,5 @@ class EuroSAT(EuroSATBase):
         self.data_folder = 'ds/images/remote_sensing/otherDatasets/sentinel_2/tif'
         self.bands = bands
 
-    def get_image_ds(self, images):
+    def get_image_dataset(self, images):
         return SensorImageDataset(images, Sensors.S2, self.bands)

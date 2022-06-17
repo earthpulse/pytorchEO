@@ -1,63 +1,27 @@
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 import torch
-from sklearn.model_selection import train_test_split
 
 
 class BaseDataset(pl.LightningDataModule):
-    def __init__(self, batch_size, test_size, val_size, verbose, num_workers, pin_memory, seed):
+    def __init__(self, batch_size=16, verbose=True, num_workers=0, pin_memory=False, seed=42):
         super().__init__()
         self.batch_size = batch_size
-        self.test_size = test_size
-        self.val_size = val_size
         self.verbose = verbose
         self.seed = seed
         self.num_workers = num_workers
         self.pin_memory = pin_memory
 
     def setup(self, stage=None):
-        # download, process, generate lists of samples
-        # create dataset -> self.ds should be defined here
-        pass
+        raise NotImplementedError()
 
-    def make_splits(self, stratify=None):
-
-        if self.test_size:
-            test_len = int(len(self.df)*self.test_size)
-            train_df, self.test_df = train_test_split(
-                self.df,
-                test_size=test_len,
-                random_state=self.seed,
-                stratify=self.df[stratify] if stratify else None
-            )
-        else:
-            train_df = self.df
-
-        if self.val_size:
-            val_len = int(len(self.df)*self.val_size)
-            self.train_df, self.val_df = train_test_split(
-                train_df,
-                test_size=val_len,
-                random_state=self.seed,
-                stratify=train_df[stratify] if stratify else None
-            )
-        else:
-            self.train_df = train_df
-
-        if self.verbose:
-            print("training samples", len(self.train_df))
-            if self.val_size:
-                print("validation samples", len(self.val_df))
-            if self.test_size:
-                print("test samples", len(self.test_df))
-
-    def build_datasets(self):
-        self.train_ds = self.build_dataset(self.train_df, self.train_trans)
+    def build_datasets(self, train, test = None, val = None):
+        self.train_ds = self.build_dataset(train)
         self.val_ds, self.test_ds = None, None
-        if self.test_size:
-            self.test_ds = self.build_dataset(self.test_df, self.test_trans)
-        if self.val_size:
-            self.val_ds = self.build_dataset(self.val_df, self.val_trans)
+        if test is not None:
+            self.test_ds = self.build_dataset(test)
+        if val is not None:
+            self.val_ds = self.build_dataset(val)
 
     def get_dataloader(self, ds, shuffle=False, batch_size=None):
         return DataLoader(

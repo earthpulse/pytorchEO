@@ -5,7 +5,6 @@ import numpy as np
 
 
 def read_image(src):
-    # return torchvision.io.read_image(src)  # C, H, W
     return io.imread(src)  # H, W, C
 
 
