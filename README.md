@@ -20,11 +20,9 @@ Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree
 - [BigEarthNet](https://mlhub.earth/data/bigearthnet_v1)
 - [LandCoverNet](https://mlhub.earth/10.34911/rdnt.d2ce8i)
 
-## Tutorials
+### Tutorials
 
 Learn how to build with Pytorch EO with our [tutorials](https://github.com/earthpulse/pytorch_eo/tree/main/tutorials).
-
-- [Data Loading](tutorial/00_data_loading.ipynb)
 
 ## Challenges
 
