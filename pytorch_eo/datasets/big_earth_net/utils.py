@@ -1,5 +1,8 @@
 import numpy as np
 from tqdm import tqdm
+import json 
+
+# these are the lables in the original dataset
 
 LABELS = [
     "Continuous urban fabric",
@@ -47,6 +50,8 @@ LABELS = [
     "Sea and ocean",
 ]
 
+# group previous labels in superclasses
+
 LABELS7 = {
     "Urban": [0, 1, 2],
     "Crop": [11, 12, 13, 14, 15, 16, 18, 17, 19, 20],
@@ -81,6 +86,22 @@ LABELS19 = {
     "Marine waters": [40, 41, 42],
 }
 
+def parse_labels(args):
+    path, folder, s2_path, df, check_integrity = args
+    with open(path / folder / f"{folder}_labels_metadata.json") as f:
+        metadata = json.load(f)
+        s2_image = metadata["corresponding_s2_patch"] if df else None
+        if check_integrity:
+            with open(
+                s2_path / s2_image / f"{s2_image}_labels_metadata.json"
+            ) as f:
+                s2_metadata = json.load(f)
+                assert len(s2_metadata["labels"]) == len(metadata["labels"])
+                assert all(
+                    label in s2_metadata["labels"]
+                    for label in metadata["labels"]
+                )
+    return metadata["labels"], s2_image
 
 def oh2labels(label_groups, oh):
     if label_groups:

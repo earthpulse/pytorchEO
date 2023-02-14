@@ -10,11 +10,11 @@ The task of image classification consists on assigning one label to an image.
 - EuroSAT [advanced](./eurosat_advanced.ipynb): Learn how to leverage the power of Pytorch EO in this advanced example covering topics such as data augmentation, hyperparameter optimization, etc.
 -  [UCMerced](./ucmerced.ipynb) Land Use.
 
-<!-- ## Image Multi-label Classification
+## Image Multi-label Classification
 
 The task of image multi-label classification consists on assigning multiple labels to an image.
 
-- [BigEarthNet](./big_earth_net.ipynb): Train an image classifier for a multi-label task. -->
+- [BigEarthNet](./big_earth_net.ipynb): Train an image classifier for a multi-label task.
 
 <!--## Image Segmentation
 
