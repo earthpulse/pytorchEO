@@ -1,4 +1,4 @@
-# Pytorch EO - Examples
+# Examples
 
 Here you will find multiple examples on how to use Pytorch EO for different tasks.
 
