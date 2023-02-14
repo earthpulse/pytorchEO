@@ -8,17 +8,13 @@ packages = [{include = "pytorch_eo"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-numpy = "^1.24.2"
 torch = "^1.13.1"
 torchvision = "^0.14.1"
 pytorch-lightning = "^1.9.1"
 rasterio = "^1.3.5.post1"
 scikit-image = "^0.19.3"
 scikit-learn = "^1.2.1"
-albumentations = "^1.3.0"
-einops = "^0.6.0"
 pandas = "^1.5.3"
-geopandas = "^0.12.2"
 
 
 [build-system]
