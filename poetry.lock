@@ -1063,29 +1063,29 @@ files = [
 
 [[package]]
 name = "rasterio"
-version = "1.3.5.post1"
+version = "1.3.6"
 description = "Fast and direct raster I/O for use with Numpy and SciPy"
 category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "rasterio-1.3.5.post1-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:0f2f49fcc46e3064a97afc248f94d2961c6375d511df99ba284a29de19340090"},
-    {file = "rasterio-1.3.5.post1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:0e11472a8580adba90a044c1c5402f6d9248e00f5666676a4fb48132581416de"},
-    {file = "rasterio-1.3.5.post1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:314c3a6d84df4e5060c9a1792b30e3c34b2af92d8c159f61e4760eede3bf2f2b"},
-    {file = "rasterio-1.3.5.post1-cp310-cp310-win_amd64.whl", hash = "sha256:d290c65d7dbf6d7af5dc8332c2d4a86900b05206bc267618736e7aeef4b5a4a7"},
-    {file = "rasterio-1.3.5.post1-cp311-cp311-macosx_10_15_x86_64.whl", hash = "sha256:6939e1b3d7d7ebc68e9793834298bb1d7af51fa1fe673bccf32168bfc731b1c9"},
-    {file = "rasterio-1.3.5.post1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:5fbfadbc0633e73d818ac999e1f2ad94b2d0f83622c8ea792dfd8ae7f0e0c5ad"},
-    {file = "rasterio-1.3.5.post1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4eab30e61c3ac37b5b3620fb6bdfe079479c2088e22780f1c30a73a0884d28e9"},
-    {file = "rasterio-1.3.5.post1-cp311-cp311-win_amd64.whl", hash = "sha256:dde014e8046f0894b55353a2eff4dded341ad9d7be6f63762f9e49c81fdb509f"},
-    {file = "rasterio-1.3.5.post1-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:0b8c692b4bc076eb89f5a250c7d83f2291d8f8936e97f47fb1596fb5f6fa125b"},
-    {file = "rasterio-1.3.5.post1-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:577f9cbf4fffe4e94e616bec913f9cedb000515c8ec7c42ef1664b4487548b12"},
-    {file = "rasterio-1.3.5.post1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3d43e1d660f01328ffd287036fd38096acb4aa72c13bbc8a91905c638d9d34d2"},
-    {file = "rasterio-1.3.5.post1-cp38-cp38-win_amd64.whl", hash = "sha256:2dc2840f93d4e5371a566c07c73fd0dde65fad679445fdcfa9df766e75fb7b0e"},
-    {file = "rasterio-1.3.5.post1-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:bf9f74d9dc4a72f1c73498d441c922f80bef16f05603c7596c725586c28842c4"},
-    {file = "rasterio-1.3.5.post1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:3e98df7117186aa31dcb1172db7f70dfd67f5a7f76779d7272916443c3fa7ded"},
-    {file = "rasterio-1.3.5.post1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:04cdc6ea98c54987000c719c21f0419e66cd0d2cf274fd2d3fa98c7523ca5579"},
-    {file = "rasterio-1.3.5.post1-cp39-cp39-win_amd64.whl", hash = "sha256:31c42a5ab07dace6aded4ac703c9c7871bc3f8f12ab01a96f7bd63340ecf5433"},
-    {file = "rasterio-1.3.5.post1.tar.gz", hash = "sha256:78efee9b975c0601c67817abb501333c722125e38d10f90addf1bcb7a49008b3"},
+    {file = "rasterio-1.3.6-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:23a8d10ba17301029962a5667915381a8b4711ed80b712eb71cf68834cb5f946"},
+    {file = "rasterio-1.3.6-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:76b6bd4b566cd733f0ddd05ba88bea3f96705ff74e2e5fab73ead2a26cbc5979"},
+    {file = "rasterio-1.3.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:50785004d7adf66cf96c9c3498cf530ec91292e9349e66e8d1f1183085ee93b1"},
+    {file = "rasterio-1.3.6-cp310-cp310-win_amd64.whl", hash = "sha256:9f3f901097c3f306f1143d6fdc503440596c66a2c39054e25604bdf3f4eaaff3"},
+    {file = "rasterio-1.3.6-cp311-cp311-macosx_10_15_x86_64.whl", hash = "sha256:a732f8d314b7d9cb532b1969e968d08bf208886f04309662a5d16884af39bb4a"},
+    {file = "rasterio-1.3.6-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:d03e2fcd8f3aafb0ea1fa27a021fecc385655630a46c70d6ba693675c6cc3830"},
+    {file = "rasterio-1.3.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:69fdc712e9c79e82d00d783d23034bb16ca8faa18856e83e297bb7e4d7e3e277"},
+    {file = "rasterio-1.3.6-cp311-cp311-win_amd64.whl", hash = "sha256:83f764c2b30e3d07bea5626392f1ce5481e61d5583256ab66f3a610a2f40dec7"},
+    {file = "rasterio-1.3.6-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:1321372c653a36928b4e5e11cbe7f851903fb76608b8e48a860168b248d5f8e6"},
+    {file = "rasterio-1.3.6-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:8a584fedd92953a0580e8de3f41ce9f33a3205ba79ea58fff8f90ba5d14a0c04"},
+    {file = "rasterio-1.3.6-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:92f0f92254fcce57d25d5f60ef2cf649297f8a1e1fa279b32795bde20f11ff41"},
+    {file = "rasterio-1.3.6-cp38-cp38-win_amd64.whl", hash = "sha256:e73339e8fb9b9091a4a0ffd9f84725b2d1f118cf51c35fb0d03b94e82e1736a3"},
+    {file = "rasterio-1.3.6-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:eaaeb2e661d1ffc07a7ae4fd997bb326d3561f641178126102842d608a010cc3"},
+    {file = "rasterio-1.3.6-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:0883a38bd32e6a3d8d85bac67e3b75a2f04f7de265803585516883223ddbb8d1"},
+    {file = "rasterio-1.3.6-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b72fc032ddca55d73de87ef3872530b7384989378a1bc66d77c69cedafe7feaf"},
+    {file = "rasterio-1.3.6-cp39-cp39-win_amd64.whl", hash = "sha256:cb3288add5d55248f5d48815f9d509819ba8985cd0302d2e8dd743f83c5ec96d"},
+    {file = "rasterio-1.3.6.tar.gz", hash = "sha256:c8b90eb10e16102d1ab0334a7436185f295de1c07f0d197e206d1c005fc33905"},
 ]
 
 [package.dependencies]
@@ -1265,14 +1265,14 @@ test = ["asv", "gmpy2", "mpmath", "pytest", "pytest-cov", "pytest-xdist", "sciki
 
 [[package]]
 name = "setuptools"
-version = "67.2.0"
+version = "67.3.1"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "setuptools-67.2.0-py3-none-any.whl", hash = "sha256:16ccf598aab3b506593c17378473978908a2734d7336755a8769b480906bec1c"},
-    {file = "setuptools-67.2.0.tar.gz", hash = "sha256:b440ee5f7e607bb8c9de15259dba2583dd41a38879a7abc1d43a71c59524da48"},
+    {file = "setuptools-67.3.1-py3-none-any.whl", hash = "sha256:23c86b4e44432bfd8899384afc08872ec166a24f48a3f99f293b0a557e6a6b5d"},
+    {file = "setuptools-67.3.1.tar.gz", hash = "sha256:daec07fd848d80676694d6bf69c009d28910aeece68a38dbe88b7e1bb6dba12e"},
 ]
 
 [package.extras]
