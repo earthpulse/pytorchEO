@@ -7,6 +7,7 @@ def bands2values(bands):
     else:
         return bands.value
 
+
 # convert bands from enum to names
 
 

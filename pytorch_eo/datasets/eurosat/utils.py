@@ -19,14 +19,13 @@ def download_data(path, compressed_data_filename, data_folder, download, url, ve
             else:
                 print("data already downloaded !")
 
-            unzip_file(compressed_data_path, path,
-                       msg="extracting data ...")
+            unzip_file(compressed_data_path, path, msg="extracting data ...")
         else:
             if verbose:
                 print("data already extracted !")
             # TODO: check data is correct
     else:
-        assert os.path.isdir(uncompressed_data_path), 'data not found'
+        assert os.path.isdir(uncompressed_data_path), "data not found"
         # TODO: check data is correct
     return uncompressed_data_path
 
@@ -40,10 +39,9 @@ def generate_df(classes, uncompressed_data_path, verbose):
     images, labels = [], []
     for ix, label in enumerate(classes):
         _images = os.listdir(uncompressed_data_path / label)
-        images += [str(uncompressed_data_path /
-                       label / img) for img in _images]
-        labels += [ix]*len(_images)
+        images += [str(uncompressed_data_path / label / img) for img in _images]
+        labels += [ix] * len(_images)
     assert len(images) == len(labels)
     if verbose:
-        print(f'Number of images: {len(images)}')
-    return pd.DataFrame({'image': images, 'label': labels})
+        print(f"Number of images: {len(images)}")
+    return pd.DataFrame({"image": images, "label": labels})

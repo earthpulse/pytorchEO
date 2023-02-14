@@ -9,7 +9,7 @@ class SensorImageDataset(RasterioImageDataset):
     def __init__(self, images, sensor, bands):
         super().__init__(images, bands)
 
-        assert isinstance(sensor, Sensors), 'invalid sensor'
+        assert isinstance(sensor, Sensors), "invalid sensor"
         sensor = getattr(sensors, sensor.value)
 
         # parse bands and compute number
@@ -20,9 +20,9 @@ class SensorImageDataset(RasterioImageDataset):
         if isinstance(self.bands, list):
             self.in_chans = len(bands)
             for band in self.bands:
-                assert band in sensor, 'invalid band'
+                assert band in sensor, "invalid band"
         else:
-            assert self.bands in sensor, 'invalid band'
+            assert self.bands in sensor, "invalid band"
             if isinstance(self.bands.value, list):
                 self.in_chans = len(self.bands.value)
             else:

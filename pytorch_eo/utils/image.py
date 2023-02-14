@@ -24,13 +24,14 @@
 import torch
 import numpy as np
 
+
 def contrast_stretch(data, in_range, out_range, clip):
     lower_bound_in, upper_bound_in = in_range
     lower_bound_out, upper_bound_out = out_range
 
     if isinstance(data, np.ndarray):
-        out_data = data.astype('float64', copy=True)
-    else: # torch tensor
+        out_data = data.astype("float64", copy=True)
+    else:  # torch tensor
         out_data = data.float().clone()
     out_data -= lower_bound_in
     norm = upper_bound_in - lower_bound_in
@@ -43,8 +44,7 @@ def contrast_stretch(data, in_range, out_range, clip):
 
 
 def to_uint8(data, lower_bound, upper_bound):
-    rescaled = contrast_stretch(
-        data, (lower_bound, upper_bound), (0, 255), clip=True)
+    rescaled = contrast_stretch(data, (lower_bound, upper_bound), (0, 255), clip=True)
     if isinstance(rescaled, np.ndarray):
         return rescaled.astype(np.uint8)
     return rescaled.type(torch.uint8)

@@ -14,13 +14,12 @@ import torch.nn.functional as F
 
 
 class Dataset(SegmentationDataset):
-
     def __init__(self, images, masks=None, classes=[], trans=None, norm_value=4000):
         super().__init__(images, masks, trans, len(classes), norm_value)
         self.classes = classes
 
     def _norm_image(self, img):
-        return np.clip(10.**(img / 10.), 0, 1)  # undo db, 0-1
+        return np.clip(10.0 ** (img / 10.0), 0, 1)  # undo db, 0-1
 
     def _img_to_tensor(self, img):
         img_t = torch.from_numpy(img).float().permute(2, 0, 1)
@@ -28,7 +27,7 @@ class Dataset(SegmentationDataset):
         if torch.any(img_t.isnan()):  # there are nans in some images !
             img_t[img_t != img_t] = 0
             if torch.any(img_t.isnan()):
-                raise ValueError('image has nans !')
+                raise ValueError("image has nans !")
 
         return img_t
 
@@ -42,19 +41,18 @@ class Dataset(SegmentationDataset):
         # swap class value for position in classes list
         _mask = mask.copy()
         for ix, label in enumerate(self.classes):
-            for value in label['values']:
+            for value in label["values"]:
                 _mask[mask == value] = ix
 
         # one hot encoding
-        #mask_oh = F.one_hot(torch.from_numpy(_mask).long(), num_classes=self.num_classes)
+        # mask_oh = F.one_hot(torch.from_numpy(_mask).long(), num_classes=self.num_classes)
 
-        mask_oh = (np.arange(self.num_classes) ==
-                   _mask[..., None])
+        mask_oh = np.arange(self.num_classes) == _mask[..., None]
 
         mask_oh_t = torch.from_numpy(mask_oh).float().permute(2, 0, 1)
 
         if torch.any(mask_oh_t.isnan()):
-            raise ValueError('mask has nans !')
+            raise ValueError("mask has nans !")
 
         return mask_oh_t
 
@@ -64,11 +62,19 @@ class S1Dataset(Dataset):
         super().__init__(images, masks, classes, trans)
 
     def _norm_image(self, img):
-        return np.clip(10.**(img / 10.), 0, 1)  # undo db, 0-1
+        return np.clip(10.0 ** (img / 10.0), 0, 1)  # undo db, 0-1
 
 
 class S2Dataset(Dataset):
-    def __init__(self, images, masks=None, classes=[], trans=None, bands=(3, 2, 1), norm_value=4000):
+    def __init__(
+        self,
+        images,
+        masks=None,
+        classes=[],
+        trans=None,
+        bands=(3, 2, 1),
+        norm_value=4000,
+    ):
         super().__init__(images, masks, classes, trans, norm_value)
         self.bands = bands
 
@@ -103,23 +109,23 @@ class Sensor(Enum):
 
 
 class Sen12MS(pl.LightningDataModule):
-
-    def __init__(self,
-                 batch_size,
-                 path='/data',
-                 test_size=0.2,
-                 val_size=0.2,
-                 random_state=42,
-                 num_workers=0,
-                 pin_memory=False,
-                 shuffle=True,
-                 verbose=True,
-                 sensor=Sensor.S2,
-                 train_trans=None,
-                 val_trans=None,
-                 test_trans=None,
-                 **kwargs
-                 ):
+    def __init__(
+        self,
+        batch_size,
+        path="/data",
+        test_size=0.2,
+        val_size=0.2,
+        random_state=42,
+        num_workers=0,
+        pin_memory=False,
+        shuffle=True,
+        verbose=True,
+        sensor=Sensor.S2,
+        train_trans=None,
+        val_trans=None,
+        test_trans=None,
+        **kwargs,
+    ):
         super().__init__()
         self.batch_size = batch_size
         self.path = Path(path)
@@ -133,16 +139,15 @@ class Sen12MS(pl.LightningDataModule):
         self.verbose = verbose
         self.sensor = sensor
         self.classes = [  # LCCS LU, extracted from paper
-            {'name': 'other', 'values': [255], 'color': '#000000'},
-            {'name': 'dense-forest', 'values': [10], 'color': '#277732'},
-            {'name': 'open-forest', 'values': [20, 25], 'color': '#56bf64'},
-            {'name': 'herbaceous', 'values': [30, 36, 35], 'color': '#00ff00'},
-            {'name': 'shrublands', 'values': [40], 'color': '#ffeb14'},
-            {'name': 'urban', 'values': [9], 'color': '#ff0000'},
-            {'name': 'permanent-snow-and-ice',
-                'values': [2], 'color': '#ffffff'},
-            {'name': 'barren', 'values': [1], 'color': '#888888'},
-            {'name': 'water-bodies', 'values': [3], 'color': '#0000ff'},
+            {"name": "other", "values": [255], "color": "#000000"},
+            {"name": "dense-forest", "values": [10], "color": "#277732"},
+            {"name": "open-forest", "values": [20, 25], "color": "#56bf64"},
+            {"name": "herbaceous", "values": [30, 36, 35], "color": "#00ff00"},
+            {"name": "shrublands", "values": [40], "color": "#ffeb14"},
+            {"name": "urban", "values": [9], "color": "#ff0000"},
+            {"name": "permanent-snow-and-ice", "values": [2], "color": "#ffffff"},
+            {"name": "barren", "values": [1], "color": "#888888"},
+            {"name": "water-bodies", "values": [3], "color": "#0000ff"},
         ]
         self.in_chans = 2 if self.sensor == Sensor.S1 else 3
         self.num_classes = len(self.classes)
@@ -161,12 +166,14 @@ class Sen12MS(pl.LightningDataModule):
         path = os.path.join(self.path, season)
 
         if not os.path.exists(path):
-            raise NameError("Could not find season {} in base directory {}".format(
-                season, self.path))
+            raise NameError(
+                "Could not find season {} in base directory {}".format(
+                    season, self.path
+                )
+            )
 
-        scene_list = [os.path.basename(s)
-                      for s in glob.glob(os.path.join(path, "*"))]
-        scene_list = [int(s.split('_')[1]) for s in scene_list]
+        scene_list = [os.path.basename(s) for s in glob.glob(os.path.join(path, "*"))]
+        scene_list = [int(s.split("_")[1]) for s in scene_list]
         return set(scene_list)
 
     def get_patch_ids(self, season, scene_id):
@@ -175,10 +182,13 @@ class Sen12MS(pl.LightningDataModule):
 
         if not os.path.exists(path):
             raise NameError(
-                "Could not find scene {} within season {}".format(scene_id, season))
+                "Could not find scene {} within season {}".format(scene_id, season)
+            )
 
-        patch_ids = [os.path.splitext(os.path.basename(p))[0]
-                     for p in glob.glob(os.path.join(path, "*"))]
+        patch_ids = [
+            os.path.splitext(os.path.basename(p))[0]
+            for p in glob.glob(os.path.join(path, "*"))
+        ]
         patch_ids = [int(p.rsplit("_", 1)[1].split("p")[1]) for p in patch_ids]
 
         return patch_ids
@@ -201,25 +211,22 @@ class Sen12MS(pl.LightningDataModule):
 
         self.season_ids = season_ids
 
-        data = {
-            'image': [],
-            'mask': [],
-            'season': []
-        }
+        data = {"image": [], "mask": [], "season": []}
         for season in Seasons.ALL.value:
             scenes = season_ids[season]
             for scene in scenes:
                 patches = season_ids[season][scene]
                 for patch in patches:
-                    data['image'].append(
-                        f'{self.path}/{season}/{self.sensor.value}_{scene}/{season}_{self.sensor.value}_{scene}_p{patch}.tif')
-                    data['mask'].append(
-                        f'{self.path}/{season}/lc_{scene}/{season}_lc_{scene}_p{patch}.tif')
-                    data['season'].append(season)
+                    data["image"].append(
+                        f"{self.path}/{season}/{self.sensor.value}_{scene}/{season}_{self.sensor.value}_{scene}_p{patch}.tif"
+                    )
+                    data["mask"].append(
+                        f"{self.path}/{season}/lc_{scene}/{season}_lc_{scene}_p{patch}.tif"
+                    )
+                    data["season"].append(season)
         df = pd.DataFrame(data)
 
-        assert len(
-            df) == 180662, 'the dataset should contain 180662 patch triplets'
+        assert len(df) == 180662, "the dataset should contain 180662 patch triplets"
 
         # data splits (can we stratify ?)
         test_size = int(len(df) * self.test_size)
@@ -230,7 +237,7 @@ class Sen12MS(pl.LightningDataModule):
             test_size=test_size,
             random_state=self.random_state,
             stratify=df.season,
-            shuffle=True
+            shuffle=True,
         )
 
         self.train_df, self.val_df = train_test_split(
@@ -238,7 +245,7 @@ class Sen12MS(pl.LightningDataModule):
             test_size=val_size,
             random_state=self.random_state,
             stratify=train_df.season,
-            shuffle=True
+            shuffle=True,
         )
 
         if self.verbose:
@@ -249,11 +256,23 @@ class Sen12MS(pl.LightningDataModule):
         # datasets
 
         self.train_ds = self.Dataset(
-            self.train_df.image.values, self.train_df['mask'].values, self.classes, self.train_trans)
+            self.train_df.image.values,
+            self.train_df["mask"].values,
+            self.classes,
+            self.train_trans,
+        )
         self.val_ds = self.Dataset(
-            self.val_df.image.values, self.val_df['mask'].values, self.classes, self.val_trans)
+            self.val_df.image.values,
+            self.val_df["mask"].values,
+            self.classes,
+            self.val_trans,
+        )
         self.test_ds = self.Dataset(
-            self.test_df.image.values, self.test_df['mask'].values, self.classes, self.test_trans)
+            self.test_df.image.values,
+            self.test_df["mask"].values,
+            self.classes,
+            self.test_trans,
+        )
 
     def train_dataloader(self):
         return DataLoader(
@@ -261,7 +280,7 @@ class Sen12MS(pl.LightningDataModule):
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
-            shuffle=self.shuffle
+            shuffle=self.shuffle,
         )
 
     def val_dataloader(self):
@@ -270,7 +289,7 @@ class Sen12MS(pl.LightningDataModule):
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
-            shuffle=False
+            shuffle=False,
         )
 
     def test_dataloader(self):
@@ -279,5 +298,5 @@ class Sen12MS(pl.LightningDataModule):
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             pin_memory=self.pin_memory,
-            shuffle=False
+            shuffle=False,
         )

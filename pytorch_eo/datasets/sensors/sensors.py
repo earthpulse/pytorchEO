@@ -1,14 +1,17 @@
 from enum import Enum
 
+
 class Sensors(Enum):
-    S1 = 'S1'
-    S2 = 'S2'
+    S1 = "S1"
+    S2 = "S2"
+
 
 class S1(Enum):
     VV = 1
     VH = 2
     ALL = [VV, VH]
     NONE = []
+
 
 class S2(Enum):
     B01 = aerosol = 1

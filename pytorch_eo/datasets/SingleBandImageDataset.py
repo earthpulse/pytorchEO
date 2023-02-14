@@ -6,7 +6,7 @@ import numpy as np
 
 
 class SingleBandImageDataset(SensorImageDataset):
-    def __init__(self, images, sensor, bands, prefix=None, ext='.tif', lowercase=False):
+    def __init__(self, images, sensor, bands, prefix=None, ext=".tif", lowercase=False):
         super().__init__(images, sensor, bands)
         self.prefix = prefix
         self.bands = bands2names(bands)
@@ -16,9 +16,10 @@ class SingleBandImageDataset(SensorImageDataset):
     def __getitem__(self, ix):
         prefix = self.prefix[ix] if self.prefix is not None else None
         img = read_sb_image(
-            self.images[ix], self.bands, prefix, self.ext, self.lowercase)
+            self.images[ix], self.bands, prefix, self.ext, self.lowercase
+        )
         if img.dtype == np.uint16:  # uin16 is not supported by pytorch
             img = img.astype(np.float32)
         if img.ndim == 3:
-            return rearrange(img, 'c h w -> h w c')
+            return rearrange(img, "c h w -> h w c")
         return img

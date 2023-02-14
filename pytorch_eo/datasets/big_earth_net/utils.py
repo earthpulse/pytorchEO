@@ -1,5 +1,5 @@
-import numpy as np 
-from tqdm import tqdm 
+import numpy as np
+from tqdm import tqdm
 
 LABELS = [
     "Continuous urban fabric",
@@ -44,7 +44,7 @@ LABELS = [
     "Water bodies",
     "Coastal lagoons",
     "Estuaries",
-    "Sea and ocean"
+    "Sea and ocean",
 ]
 
 LABELS7 = {
@@ -54,7 +54,7 @@ LABELS7 = {
     "Vegetation": [25, 31, 26, 27, 28],
     "Beaches, dunes, sands": [29],
     "Wetlands": [33, 34, 35, 36],
-    "Water": [38, 39, 40, 41, 42]
+    "Water": [38, 39, 40, 41, 42],
 }
 
 LABELS19 = {
@@ -64,7 +64,9 @@ LABELS19 = {
     "Permanent crops": [14, 15, 16, 18],
     "Pastures": [17],
     "Complex cultivation patterns": [19],
-    "Land principally occupied by agriculture, with significant areas of natural vegetation": [20],
+    "Land principally occupied by agriculture, with significant areas of natural vegetation": [
+        20
+    ],
     "Agro-forestry areas": [21],
     "Broad-leaved forest": [22],
     "Coniferous forest": [23],
@@ -76,7 +78,7 @@ LABELS19 = {
     "Inland wetlands": [33, 34],
     "Coastal wetlands": [35, 36],
     "Inland waters": [38, 39],
-    "Marine waters": [40, 41, 42]
+    "Marine waters": [40, 41, 42],
 }
 
 
@@ -111,13 +113,15 @@ def encode_labels(labels, unique_labels):
     return new_labels
 
 
-def get_processed_data_filename(processed_data_name, label_groups, filter_clouds=False, filter_snow=False):
+def get_processed_data_filename(
+    processed_data_name, label_groups, filter_clouds=False, filter_snow=False
+):
     file_name = processed_data_name
     if filter_clouds:
-        file_name += '_cloudless'
+        file_name += "_cloudless"
     if filter_snow:
-        file_name += '_snowless'
+        file_name += "_snowless"
     if label_groups:
-        file_name += f'_LABELS{len(label_groups.keys())}'
-    file_name += '.json'
+        file_name += f"_LABELS{len(label_groups.keys())}"
+    file_name += ".json"
     return file_name
