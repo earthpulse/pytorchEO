@@ -1,10 +1,8 @@
 import pytorch_lightning as pl
 from pathlib import Path
-import numpy as np
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 from pytorch_eo.datasets import RGBImageDataset
-
 from pytorch_eo.datasets import ConcatDataset
 from .utils import *
 
