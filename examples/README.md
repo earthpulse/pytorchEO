@@ -15,13 +15,13 @@ The task of image multi-label classification consists on assigning multiple labe
 
 - [BigEarthNet](./big_earth_net.ipynb): Train an image classifier for a multi-label task. -->
 
-## Image Segmentation
+<!--## Image Segmentation
 
 The task of image segmentation consists on assigning one label to each pixel of an image.
 
 - [LandCoverNet](./land_cover_net.ipynb): Learn how to train a model for image segmentation.
 
-<!-- ## Data Fusion
+ ## Data Fusion
 
 Data fusion is a technique that consists on leveraging multiple data sources at the same time to solve a task.
 
@@ -35,13 +35,14 @@ Self-Supervised Learning is a technique that consists on training a model withou
 
 ## Coming soon ...
 
-- Time series inputs
+- Image segmentation
 - Object detection
 - Self-Supervised learning (pre-training)
+- Time series inputs
 - Multi-task learning
 - Multi-modal inputs
-- Integrations (models universe, SCAN, SPAI)
+- Integrations 
 - Research (custom datasets, custom tasks)
-- Production (export models, upload to universe, access through SPAI)
+- Production 
 - Challenges
-- AutoML: NAS, HPO
+<!-- - AutoML: NAS, HPO -->
