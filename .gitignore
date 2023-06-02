@@ -11,3 +11,4 @@ tutorials/data
 *.ckpt
 lightning_logs
 challenges/*/data
+.ipynb_checkpoints/
