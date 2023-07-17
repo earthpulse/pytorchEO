@@ -1,14 +1,16 @@
-import pytorch_lightning as pl
+import lightning as L
 from pathlib import Path
 import numpy as np
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
 
 from pytorch_eo.datasets import ConcatDataset
 from .utils import *
 
 
-class EuroSATBase(pl.LightningDataModule):
+class EuroSATBase(L.LightningDataModule):
     def __init__(
         self,
         batch_size=32,
@@ -121,6 +123,16 @@ class EuroSATBase(pl.LightningDataModule):
 
     def get_dataset(self, df, trans=None):
         images_ds = self.get_image_dataset(df.image.values)
+        trans = (
+            A.Compose(
+                [
+                    A.Normalize(0, 1),  # divide by 255
+                    ToTensorV2(),  # convert to float tensor and channel first
+                ]
+            )
+            if trans is None
+            else trans
+        )
         return ConcatDataset({"image": images_ds, "label": df.label.values}, trans)
 
     def get_image_dataset(self):

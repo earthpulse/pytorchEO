@@ -1,24 +1,35 @@
-from pytorch_eo.metrics.classification import accuracy
 from ..BaseTask import BaseTask
 import torch
+import torchvision
+import torchmetrics
 
 
 class ImageClassification(BaseTask):
     def __init__(
         self,
-        model,
+        model=None,
         hparams=None,
         inputs=["image"],
         outputs=["label"],
         loss_fn=None,
         metrics=None,
+        num_classes=None,
     ):
-
         # defaults
+        if num_classes is None and model is None:
+            raise ValueError("num_classes or model must be provided")
+        if model is None:
+            model = torchvision.models.resnet18()
+            model.fc = torch.nn.Linear(512, 10)
         loss_fn = torch.nn.CrossEntropyLoss() if loss_fn is None else loss_fn
         hparams = {"optimizer": "Adam"} if hparams is None else hparams
-        metrics = {"acc": accuracy} if metrics is None else metrics
-
+        if metrics is None and num_classes is None:
+            raise ValueError("num_classes must be provided if metrics is None")
+        metrics = (
+            {"acc": torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)}
+            if metrics is None
+            else metrics
+        )
         super().__init__(model, hparams, inputs, outputs, loss_fn, metrics)
 
     def predict(self, batch):

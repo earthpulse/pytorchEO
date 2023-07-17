@@ -1,9 +1,9 @@
 import torch
-import pytorch_lightning as pl
+import lightning as L
 import torchvision
 
 
-class BaseTask(pl.LightningModule):
+class BaseTask(L.LightningModule):
     def __init__(
         self, model, hparams=None, inputs=None, outputs=None, loss_fn=None, metrics=None
     ):
@@ -14,6 +14,10 @@ class BaseTask(pl.LightningModule):
         self.inputs = inputs
         self.outputs = outputs
         self.loss_fn = loss_fn
+        # required for torchmetrics, don't know if with custom functions will break
+        if metrics is not None:
+            for k, v in self.metrics.items():
+                setattr(self, k, v)
 
     def configure_model(self, model):
         if isinstance(model, str):
