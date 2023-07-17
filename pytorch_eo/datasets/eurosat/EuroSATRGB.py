@@ -1,5 +1,7 @@
 from .EuroSATBase import EuroSATBase
 from pytorch_eo.datasets import RGBImageDataset
+import albumentations as A
+from albumentations.pytorch import ToTensorV2
 
 
 class EuroSATRGB(EuroSATBase):
@@ -41,3 +43,17 @@ class EuroSATRGB(EuroSATBase):
 
     def get_image_dataset(self, images):
         return RGBImageDataset(images)
+
+    def setup_trans(self, trans):
+        if trans is None:
+            return (
+                A.Compose(
+                    [
+                        A.Normalize(0, 1),  # divide by 255
+                        ToTensorV2(),  # convert to float tensor and channel first
+                    ]
+                )
+                if trans is None
+                else trans
+            )
+        return trans

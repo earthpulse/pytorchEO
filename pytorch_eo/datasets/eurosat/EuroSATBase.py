@@ -3,8 +3,7 @@ from pathlib import Path
 import numpy as np
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
+
 
 from pytorch_eo.datasets import ConcatDataset
 from .utils import *
@@ -34,9 +33,15 @@ class EuroSATBase(L.LightningDataModule):
         self.test_size = test_size
         self.val_size = val_size
         self.num_classes = 10
-        self.train_trans = train_trans
-        self.val_trans = val_trans
-        self.test_trans = test_trans
+        self.train_trans = (
+            train_trans if train_trans is not None else self.setup_trans(train_trans)
+        )
+        self.val_trans = (
+            val_trans if val_trans is not None else self.setup_trans(val_trans)
+        )
+        self.test_trans = (
+            test_trans if test_trans is not None else self.setup_trans(test_trans)
+        )
         self.label_ratio = label_ratio
         assert (
             label_ratio > 0 and label_ratio <= 1
@@ -123,16 +128,6 @@ class EuroSATBase(L.LightningDataModule):
 
     def get_dataset(self, df, trans=None):
         images_ds = self.get_image_dataset(df.image.values)
-        trans = (
-            A.Compose(
-                [
-                    A.Normalize(0, 1),  # divide by 255
-                    ToTensorV2(),  # convert to float tensor and channel first
-                ]
-            )
-            if trans is None
-            else trans
-        )
         return ConcatDataset({"image": images_ds, "label": df.label.values}, trans)
 
     def get_image_dataset(self):

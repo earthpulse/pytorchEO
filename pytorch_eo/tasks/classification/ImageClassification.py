@@ -20,7 +20,7 @@ class ImageClassification(BaseTask):
             raise ValueError("num_classes or model must be provided")
         if model is None:
             model = torchvision.models.resnet18()
-            model.fc = torch.nn.Linear(512, 10)
+            model.fc = torch.nn.Linear(512, num_classes)
         loss_fn = torch.nn.CrossEntropyLoss() if loss_fn is None else loss_fn
         hparams = {"optimizer": "Adam"} if hparams is None else hparams
         if metrics is None and num_classes is None:

@@ -1,4 +1,4 @@
-import pytorch_lightning as pl
+import lightning as L
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
@@ -7,7 +7,7 @@ from pytorch_eo.datasets import ConcatDataset
 from .utils import *
 
 
-class UCMercedLandUse(pl.LightningDataModule):
+class UCMercedLandUse(L.LightningDataModule):
     def __init__(
         self,
         batch_size=32,
@@ -51,9 +51,11 @@ class UCMercedLandUse(pl.LightningDataModule):
             self.url,
             self.verbose,
         )
-        self.classes = sorted(os.listdir(uncompressed_data_path / 'Images'))
+        self.classes = sorted(os.listdir(uncompressed_data_path / "Images"))
         assert len(self.classes) == self.num_classes
-        self.df = generate_df(self.classes, uncompressed_data_path / 'Images', self.verbose)
+        self.df = generate_df(
+            self.classes, uncompressed_data_path / "Images", self.verbose
+        )
         self.make_splits()
         self.train_ds = self.get_dataset(self.train_df, self.train_trans)
         self.val_ds = (

@@ -57,7 +57,7 @@ class BaseTask(L.LightningModule):
 
     def training_step(self, batch, batch_idx):
         loss, metrics = self.step(batch)
-        self.log("loss", loss)
+        self.log("loss", loss, prog_bar=True)
         for metric_name, metric in metrics.items():
             self.log(metric_name, metric, prog_bar=True)
         return loss
