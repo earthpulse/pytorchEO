@@ -65,13 +65,13 @@ def mosaic_images(uncompressed_data_path: str, verbose: bool = False):
     # Get a list with all the directories containing images
     raster_dirs = list(set([os.path.dirname(image) for image in images]))
     # For each directory, mosaic the images
+    mosaic_sizes = None
     for raster_dir in raster_dirs:
         # Get the path of all the images in the directory
         images_to_mosaic = glob(f'{raster_dir}/*.tif')
         # Sort the images
         images_to_mosaic.sort()
         if os.path.join(raster_dir, 'mosaic.tif') in images_to_mosaic:
-            ds = rio.open(os.path.join(raster_dir, 'mosaic.tif'))
             continue
         # Set the path of the mosaic image
         mosaic_image = os.path.join(raster_dir, 'mosaic.tif')
@@ -80,6 +80,13 @@ def mosaic_images(uncompressed_data_path: str, verbose: bool = False):
         for fp in images_to_mosaic:
             src = rio.open(fp)
             src_to_mosaic.append(src)
+            size = src.shape
+        # Get the size of all the images if not calculated yet
+        if not mosaic_sizes:
+            mosaic_sizes = set([rio.open(image).shape for image in images])
+        # Check that all the images have the same size. If not, get the minimum size by default
+        if len(mosaic_sizes) > 1:
+            size = min(mosaic_sizes)
         # Prepara the images
         imgs = [src.read(1) for src in src_to_mosaic]
         # Copy the metadata
@@ -89,10 +96,11 @@ def mosaic_images(uncompressed_data_path: str, verbose: bool = False):
             {"driver": "GTiff",
             "transform": src.transform,
             "crs": "EPSG:4326",
-            "count": len(imgs)
+            "count": len(imgs),
+            "height": size[0],
+            "width": size[1]
             }
         )
-        # TODO resize to the biggest image
         # Write the mosaic image
         idx = 1
         with rio.open(mosaic_image, "w", **out_meta) as dest:

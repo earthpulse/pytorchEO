@@ -20,7 +20,7 @@ class SEN12Floods(L.LightningDataModule):
         batch_size=32,
         download=True,
         path='./data',
-        processed_data_path='/Users/fran/Documents/datasets/sen12floods/sen12floods/sen12floods_s2_source',
+        processed_data_path='/Users/fran/Documents/datasets/sen12floods/sen12floods',
         test_size=0.2,
         val_size=0.2,
         train_trans=None,
@@ -30,15 +30,13 @@ class SEN12Floods(L.LightningDataModule):
         pin_memory=False,
         seed=42,
         verbose=False,
-        bands=None,
+        bands=S2.RGB,
+        sensor=Sensors.S2,
         label_ratio=1,
     ):
         super().__init__()
-        # self.url = "http://madm.dfki.de/files/sentinel/EuroSATallBands.zip"
-        # self.compressed_data_filename = "EuroSATallBands.zip"
-        # self.data_folder = "ds/images/remote_sensing/otherDatasets/sentinel_2/tif"
         self.bands = bands if bands is not None else S2.RGB
-        self.sensors = list(self.bands.keys())
+        self.sensor = sensor
         self.num_bands = (
             len(self.bands)
             if isinstance(self.bands, list)
@@ -69,6 +67,10 @@ class SEN12Floods(L.LightningDataModule):
         self.verbose = verbose
 
     def setup(self, stage=None):
+        if isinstance(self.sensor, list):
+            raise NotImplementedError(
+                "Multiple sensors not implemented for SEN12Floods, please choose one sensor"
+            )
         if os.path.exists(self.processed_data_path):
             uncompressed_data_path = self.processed_data_path
         else:
@@ -82,6 +84,10 @@ class SEN12Floods(L.LightningDataModule):
             #     self.url,
             #     self.verbose,
             # )
+        if self.sensor.value == "S1":
+            uncompressed_data_path = os.path.join(uncompressed_data_path, 'sen12floods_s1_source')
+        elif self.sensor.value == "S2":
+            uncompressed_data_path = os.path.join(uncompressed_data_path, 'sen12floods_s2_source')
         mosaic_images(uncompressed_data_path, verbose=self.verbose)
         self.classes, images_labels = generate_classes_list(uncompressed_data_path)
         self.num_classes = len(self.classes)
@@ -111,7 +117,6 @@ class SEN12Floods(L.LightningDataModule):
                     "training samples after label ratio filtering:", len(self.train_df)
                 )
 
-
         self.train_ds = self.get_dataset(self.train_df, self.train_trans)
         self.val_ds = (
             self.get_dataset(self.val_df, self.val_trans)
@@ -123,14 +128,6 @@ class SEN12Floods(L.LightningDataModule):
             if self.test_df is not None
             else None
         )
-        
-        '''
-        self.train_ds = self.build_dataset(self.train_df, self.train_trans)
-        if self.test_size:
-            self.test_ds = self.build_dataset(self.test_df, self.test_trans)
-        if self.val_size:
-            self.val_ds = self.build_dataset(self.val_df, self.val_trans)
-        '''
 
     def make_splits(self):
         if self.test_size > 0:
@@ -157,35 +154,6 @@ class SEN12Floods(L.LightningDataModule):
                 print("Validation samples", len(self.val_df))
             if self.test_df is not None:
                 print("Test samples", len(self.test_df))
-
-    def build_dataset(self, df, trans):
-        s1_df = df[df['image'].str.contains('_s1_')]
-        s2_df = df[df['image'].str.contains('_s2_')]
-
-        # Compare the size of both dataframes. If they are different, sample the biggest one to match the size of the smallest one
-        if len(s1_df) != len(s2_df):
-            if len(s1_df) > len(s2_df):
-                s1_df = s1_df.sample(len(s2_df))
-            else:
-                s2_df = s2_df.sample(len(s1_df))
-
-        data = {
-            Sensors.S1.value: SingleBandImageDataset(
-                s1_df,
-                Sensors.S1,
-                self.bands[Sensors.S1],
-                prefix=[img.split("/")[-1] + "_" for img in s1_df['image'].values],
-            ),
-            Sensors.S2.value: SingleBandImageDataset(
-                s2_df,
-                Sensors.S2,
-                self.bands[Sensors.S2],
-                prefix=[img.split("/")[-1] + "_" for img in s2_df['image'].values],
-            ),  
-        }
-        return ConcatDataset(
-            data, trans, image_key="S1" if len(self.sensors) > 1 else "image"
-        )
 
     def get_dataset(self, df, trans=None):
         images_ds = self.get_image_dataset(df.image.values)
@@ -218,7 +186,7 @@ class SEN12Floods(L.LightningDataModule):
         )
 
     def get_image_dataset(self, images):
-        return SensorImageDataset(images, Sensors.S2, self.bands)
+        return SensorImageDataset(images, self.sensor, self.bands)
 
     def setup_trans(self, trans):
         if trans is None:
