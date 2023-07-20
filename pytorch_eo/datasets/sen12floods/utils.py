@@ -6,50 +6,6 @@ import geopandas as gpd
 import rasterio as rio
 
 
-def download_data(path, compressed_data_filename, data_folder, download, url, verbose) -> str:
-    """
-    Download and extract the data if needed
-
-    Parameters
-    ----------
-    path : str
-        Path to the data folder
-    compressed_data_filename : str
-        Name of the compressed data file
-    data_folder : str
-        Name of the folder containing the data
-    download : bool
-        Whether to download the data or not
-    url : str
-        URL of the data
-    verbose : bool
-        Whether to print information or not
-    """
-    compressed_data_path = path / compressed_data_filename
-    uncompressed_data_path = path / data_folder
-    if download:
-        # create data folder
-        os.makedirs(path, exist_ok=True)
-        # extract
-        if not os.path.isdir(uncompressed_data_path):
-            # check data is not already downloaded
-            if not os.path.isfile(compressed_data_path):
-                print("downloading data ...")
-                download_url(url, compressed_data_path)
-            else:
-                print("data already downloaded !")
-
-            unzip_file(compressed_data_path, path, msg="extracting data ...")
-        else:
-            if verbose:
-                print("data already extracted !")
-            # TODO: check data is correct
-    else:
-        assert os.path.isdir(uncompressed_data_path), "data not found"
-        # TODO: check data is correct
-    return uncompressed_data_path
-
-
 def generate_classes_list(uncompressed_data_path) -> list:
     """
     Retrieve classes from the labels associated to the images

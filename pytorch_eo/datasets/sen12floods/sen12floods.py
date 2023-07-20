@@ -21,7 +21,6 @@ class SEN12Floods(L.LightningDataModule):
     def __init__(
         self,
         batch_size=32,
-        download=True,
         path='./data',
         processed_data_path='./data/sen12floods',
         test_size=0.2,
@@ -42,8 +41,6 @@ class SEN12Floods(L.LightningDataModule):
         ----------
         batch_size : int, optional
             Batch size, by default 32
-        download : bool, optional
-            Whether to download the data or not, by default True
         path : str, optional
             Path to the data folder, by default './data'
         processed_data_path : str, optional
@@ -82,7 +79,6 @@ class SEN12Floods(L.LightningDataModule):
             else None
         )
         self.batch_size = batch_size
-        self.download = download
         self.path = Path(path)
         self.processed_data_path = Path(processed_data_path)
         self.test_size = test_size
@@ -121,16 +117,9 @@ class SEN12Floods(L.LightningDataModule):
         if os.path.exists(self.processed_data_path):
             uncompressed_data_path = self.processed_data_path
         else:
-            pass
-            # TODO: download data
-            # uncompressed_data_path = download_data(
-            #     self.path,
-            #     self.compressed_data_filename,
-            #     self.data_folder,
-            #     self.download,
-            #     self.url,
-            #     self.verbose,
-            # )
+            raise NotImplementedError(
+                "You need to download the data first or give a path to the processed data. See the example in /examples/sen12floods.ipynb"
+            )
         if self.sensor.value == "S1":
             uncompressed_data_path = os.path.join(uncompressed_data_path, 'sen12floods_s1_source')
         elif self.sensor.value == "S2":
