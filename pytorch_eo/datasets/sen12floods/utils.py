@@ -6,8 +6,25 @@ import geopandas as gpd
 import rasterio as rio
 
 
-def download_data(path, compressed_data_filename, data_folder, download, url, verbose):
-    # download data
+def download_data(path, compressed_data_filename, data_folder, download, url, verbose) -> str:
+    """
+    Download and extract the data if needed
+
+    Parameters
+    ----------
+    path : str
+        Path to the data folder
+    compressed_data_filename : str
+        Name of the compressed data file
+    data_folder : str
+        Name of the folder containing the data
+    download : bool
+        Whether to download the data or not
+    url : str
+        URL of the data
+    verbose : bool
+        Whether to print information or not
+    """
     compressed_data_path = path / compressed_data_filename
     uncompressed_data_path = path / data_folder
     if download:
@@ -33,8 +50,22 @@ def download_data(path, compressed_data_filename, data_folder, download, url, ve
     return uncompressed_data_path
 
 
-def generate_classes_list(uncompressed_data_path):
-    # retrieve classes from the labels associated to the imagesç
+def generate_classes_list(uncompressed_data_path) -> list:
+    """
+    Retrieve classes from the labels associated to the images
+
+    Parameters
+    ----------
+    uncompressed_data_path : str
+        Path to the uncompressed data folder
+
+    Returns
+    -------
+    classes
+        List with the classes
+    image_labels
+        Dictionary with the path of the images as keys and the labels as values
+    """
     classes = list()
     images_labels = dict()
     # Get a list with the paths of all the mosaic images
@@ -50,7 +81,22 @@ def generate_classes_list(uncompressed_data_path):
     return classes, images_labels
 
 
-def generate_df(images_labels, verbose):
+def generate_df(images_labels, verbose) -> pd.DataFrame:
+    """
+    Generate a dataframe with the images and their labels
+
+    Parameters
+    ----------
+    images_labels : dict
+        Dictionary with the path of the images as keys and the labels as values
+    verbose : bool
+        Whether to print information or not
+
+    Returns
+    -------
+    df
+        Dataframe with the images and their labels
+    """
     images, labels = images_labels.keys(), encode_flooding(images_labels.values())
     assert len(images) == len(labels)
     if verbose:
@@ -58,7 +104,17 @@ def generate_df(images_labels, verbose):
     return pd.DataFrame({"image": images, "label": labels})
 
 
-def mosaic_images(uncompressed_data_path: str, verbose: bool = False):
+def mosaic_images(uncompressed_data_path: str, verbose: bool = False) -> None:
+    """
+    Mosaic all the images in the uncompressed data folder
+    
+    Parameters
+    ----------
+    uncompressed_data_path : str
+        Path to the uncompressed data folder
+    verbose : bool
+        Whether to print information or not
+    """
     mosaic_done = False
     # Get a list with the paths of all the images
     images = glob(f'{uncompressed_data_path}/**/*.tif', recursive=True)
@@ -112,7 +168,15 @@ def mosaic_images(uncompressed_data_path: str, verbose: bool = False):
         print(f"Mosaic images created")
 
 
-def remove_mosaics(uncompressed_data_path: str):
+def remove_mosaics(uncompressed_data_path: str) -> None:
+    """
+    Remove all the mosaic images
+
+    Parameters
+    ----------
+    uncompressed_data_path : str
+        Path to the uncompressed data folder
+    """
     # Get a list with the paths of all the mosaic images
     images = glob(f'{uncompressed_data_path}/**/mosaic.tif', recursive=True)
     # Remove all the mosaic images
@@ -120,7 +184,20 @@ def remove_mosaics(uncompressed_data_path: str):
         os.remove(image)
 
 
-def get_image_label(image: str):
+def get_image_label(image: str) -> str:
+    """
+    Get the label of an image
+    
+    Parameters
+    ----------
+    image : str
+        Path to the image
+
+    Returns
+    -------
+    label : str
+        Label of the image
+    """
     raster_dir = os.path.dirname(image)
     label = raster_dir.replace('source', 'labels')
     vector_label = os.path.join(label, 'vector_labels.geojson')
@@ -134,6 +211,19 @@ def get_image_label(image: str):
 
 
 def encode_flooding(floodings: list) -> list:
+    """
+    Encode the flooding labels
+    
+    Parameters
+    ----------
+    floodings : list
+        List with the flooding labels
+        
+    Returns
+    -------
+    encoding : list
+        List with the encoded flooding labels
+    """
     encoding = list()
     for flooding in floodings:
         if flooding == 'FLOODING':

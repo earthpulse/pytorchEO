@@ -15,12 +15,15 @@ from .utils import *
 
 
 class SEN12Floods(L.LightningDataModule):
+    """
+    SEN12Floods dataset
+    """
     def __init__(
         self,
         batch_size=32,
         download=True,
         path='./data',
-        processed_data_path='/Users/fran/Documents/datasets/sen12floods/sen12floods',
+        processed_data_path='./data/sen12floods',
         test_size=0.2,
         val_size=0.2,
         train_trans=None,
@@ -34,6 +37,42 @@ class SEN12Floods(L.LightningDataModule):
         sensor=Sensors.S2,
         label_ratio=1,
     ):
+        """
+        Parameters
+        ----------
+        batch_size : int, optional
+            Batch size, by default 32
+        download : bool, optional
+            Whether to download the data or not, by default True
+        path : str, optional
+            Path to the data folder, by default './data'
+        processed_data_path : str, optional
+            Path to the processed data folder, by default './data/sen12floods'
+        test_size : float, optional
+            Proportion of the data to use for testing, by default 0.2
+        val_size : float, optional
+            Proportion of the data to use for validation, by default 0.2
+        train_trans : albumentations.Compose, optional
+            Transformations to apply to the training data, by default None
+        val_trans : albumentations.Compose, optional
+            Transformations to apply to the validation data, by default None
+        test_trans : albumentations.Compose, optional
+            Transformations to apply to the test data, by default None
+        num_workers : int, optional
+            Number of workers to use for loading the data, by default 0
+        pin_memory : bool, optional
+            Whether to pin memory or not, by default False
+        seed : int, optional
+            Seed for reproducibility, by default 42
+        verbose : bool, optional
+            Whether to print information or not, by default False
+        bands : list, optional
+            List with the bands to use, by default S2.RGB
+        sensor : Sensors, optional
+            Sensor to use, by default Sensors.S2
+        label_ratio : float, optional
+            Ratio of the samples to use for training, by default 1
+            """
         super().__init__()
         self.bands = bands if bands is not None else S2.RGB
         self.sensor = sensor
@@ -67,6 +106,14 @@ class SEN12Floods(L.LightningDataModule):
         self.verbose = verbose
 
     def setup(self, stage=None):
+        """
+        Setup the dataset
+        
+        Parameters
+        ----------
+        stage : str, optional
+            Stage of the training, by default None
+        """
         if isinstance(self.sensor, list):
             raise NotImplementedError(
                 "Multiple sensors not implemented for SEN12Floods, please choose one sensor"
@@ -130,6 +177,18 @@ class SEN12Floods(L.LightningDataModule):
         )
 
     def make_splits(self):
+        """
+        Make the train, validation and test splits
+        
+        Returns
+        -------
+        train_df
+            Dataframe with the training samples
+        val_df
+            Dataframe with the validation samples
+        test_df
+            Dataframe with the test samples
+        """
         if self.test_size > 0:
             train_df, self.test_df = train_test_split(
                 self.df,
@@ -156,10 +215,42 @@ class SEN12Floods(L.LightningDataModule):
                 print("Test samples", len(self.test_df))
 
     def get_dataset(self, df, trans=None):
+        """
+        Get the dataset
+        
+        Parameters
+        ----------
+        df : pd.DataFrame
+            Dataframe with the samples
+        trans : albumentations.Compose, optional
+            Transformations to apply to the data, by default None
+        
+        Returns
+        -------
+        ConcatDataset
+            Dataset with the samples
+        """
         images_ds = self.get_image_dataset(df.image.values)
         return ConcatDataset({"image": images_ds, "label": df.label.values}, trans)
 
     def get_dataloader(self, ds, batch_size=None, shuffle=False):
+        """
+        Get the dataloader
+        
+        Parameters
+        ----------
+        ds : torch.utils.data.Dataset
+            Dataset with the samples
+        batch_size : int, optional
+            Batch size, by default None
+        shuffle : bool, optional
+            Whether to shuffle the data or not, by default False
+        
+        Returns
+        -------
+        DataLoader
+            Dataloader with the samples
+        """
         return DataLoader(
             ds,
             batch_size=self.batch_size if batch_size is None else batch_size,
@@ -169,9 +260,39 @@ class SEN12Floods(L.LightningDataModule):
         )
 
     def train_dataloader(self, batch_size=None, shuffle=True):
+        """
+        Get the training dataloader
+        
+        Parameters
+        ----------
+        batch_size : int, optional
+            Batch size, by default None
+        shuffle : bool, optional
+            Whether to shuffle the data or not, by default True
+        
+        Returns
+        -------
+        DataLoader
+            Dataloader with the training samples
+        """
         return self.get_dataloader(self.train_ds, batch_size, shuffle)
 
     def val_dataloader(self, batch_size=None, shuffle=False):
+        """
+        Get the validation dataloader
+
+        Parameters
+        ----------
+        batch_size : int, optional
+            Batch size, by default None
+        shuffle : bool, optional
+            Whether to shuffle the data or not, by default False
+        
+        Returns
+        -------
+        DataLoader
+            Dataloader with the validation samples
+        """
         return (
             self.get_dataloader(self.val_ds, batch_size, shuffle)
             if self.val_ds is not None
@@ -179,6 +300,21 @@ class SEN12Floods(L.LightningDataModule):
         )
 
     def test_dataloader(self, batch_size=None, shuffle=False):
+        """
+        Get the test dataloader
+        
+        Parameters
+        ----------
+        batch_size : int, optional
+            Batch size, by default None
+        shuffle : bool, optional
+            Whether to shuffle the data or not, by default False
+            
+        Returns
+        -------
+        DataLoader
+            Dataloader with the test samples
+        """
         return (
             self.get_dataloader(self.test_ds, batch_size, shuffle)
             if self.test_ds is not None
@@ -186,9 +322,35 @@ class SEN12Floods(L.LightningDataModule):
         )
 
     def get_image_dataset(self, images):
+        """
+        Get the image dataset
+        
+        Parameters
+        ----------
+        images : list
+            List with the images
+        
+        Returns
+        -------
+        SensorImageDataset
+            Dataset with the images
+        """
         return SensorImageDataset(images, self.sensor, self.bands)
 
-    def setup_trans(self, trans):
+    def setup_trans(self, trans=None): 
+        """
+        Setup the transformations
+
+        Parameters
+        ----------
+        trans : albumentations.Compose, optional
+            Transformations to apply to the data, by default None
+        
+        Returns
+        -------
+        albumentations.Compose
+            Transformations to apply to the data
+        """
         if trans is None:
 
             def clip(x, **kwargs):
@@ -199,7 +361,8 @@ class SEN12Floods(L.LightningDataModule):
 
             return (
                 A.Compose(
-                    [
+                    [   
+                        A.Resize(512, 512),
                         A.HorizontalFlip(),
                         A.VerticalFlip(),
                         A.Normalize(0, 1, max_pixel_value=4000),  # divide by 4000
