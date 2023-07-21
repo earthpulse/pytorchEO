@@ -21,8 +21,7 @@ class SEN12Floods(L.LightningDataModule):
     def __init__(
         self,
         batch_size=25,
-        path='./data',
-        processed_data_path='./data/sen12floods',
+        path='./data/sen12floods',
         test_size=0.2,
         val_size=0.2,
         train_trans=None,
@@ -72,7 +71,6 @@ class SEN12Floods(L.LightningDataModule):
         self.sensor = sensor
         self.batch_size = batch_size
         self.path = Path(path)
-        self.processed_data_path = Path(processed_data_path)
         self.test_size = test_size
         self.val_size = val_size
         self.train_trans = (
@@ -105,18 +103,18 @@ class SEN12Floods(L.LightningDataModule):
             raise NotImplementedError(
                 "Multiple sensors not implemented for SEN12Floods, please choose one sensor"
             )
-        if os.path.exists(self.processed_data_path):
-            uncompressed_data_path = self.processed_data_path
-        else:
+        if not os.path.exists(self.path):
             raise NotImplementedError(
                 "You need to download the data first or give a path to the processed data. See the example in /examples/sen12floods.ipynb"
             )
         if self.sensor.value == "S1":
-            uncompressed_data_path = os.path.join(uncompressed_data_path, 'sen12floods_s1_source')
+            uncompressed_data_path = os.path.join(self.path, 'sen12floods_s1_source')
         elif self.sensor.value == "S2":
-            uncompressed_data_path = os.path.join(uncompressed_data_path, 'sen12floods_s2_source')
+            uncompressed_data_path = os.path.join(self.path, 'sen12floods_s2_source')
         try:
             self.df = pd.read_csv(os.path.join(uncompressed_data_path, 'df.csv'))
+            if not self.df.image.values[0].startswith(uncompressed_data_path):
+                raise Exception()
         except:
             images_labels = generate_classes_list(uncompressed_data_path)
             self.df = generate_df(images_labels, self.verbose)
