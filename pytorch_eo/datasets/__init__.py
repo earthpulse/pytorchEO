@@ -6,3 +6,4 @@ from .SingleBandImageDataset import SingleBandImageDataset
 
 from .eurosat import EuroSATRGB, EuroSAT
 from .ucmerced import UCMercedLandUse
+from .sen12floods import SEN12Floods
