@@ -14,16 +14,19 @@ pip install pytorch-eo
 
 Learn by doing with our [examples](https://github.com/earthpulse/pytorch_eo/tree/main/examples).
 
-### Ready to use Datasets
-
-- [EuroSAT](https://github.com/phelber/EuroSAT).
-- [UCMerced](http://weegee.vision.ucmerced.edu/datasets/landuse.html) Land Use Dataset.
-- [BigEarthNet](https://mlhub.earth/data/bigearthnet_v1).
-<!-- - [LandCoverNet](https://mlhub.earth/10.34911/rdnt.d2ce8i) -->
+- [EuroSAT](examples/eurosat.ipynb).
+- [UCMerced](examples/ucmerced.ipynb) Land Use Dataset.
+- [BigEarthNet](examples/big_earth_net.ipynb).
+- [SEN12FLOODs](examples/sen12floods.ipynb).
 
 ### Tutorials
 
 Learn how to build with Pytorch EO with our [tutorials](https://github.com/earthpulse/pytorch_eo/tree/main/tutorials).
+
+- Learn about [data loading](tutorials/00_data_loading.ipynb) is Pytorch EO.
+- Learn about [data augmentation](tutorials/00_data_augmentation.ipynb) is Pytorch EO.
+- Learn how to [create datasets](tutorials/02_creating_datasets.ipynb) with Pytorch EO.
+- Learn about training models with our [tasks](tutorials/03_tasks.ipynb).
 
 ## Challenges
 

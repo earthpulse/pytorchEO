@@ -3,13 +3,14 @@ from pytorch_eo.utils import read_sb_image
 from pytorch_eo.datasets.sensors import bands2names
 from einops import rearrange
 import numpy as np
-
+from .sensors import sensors
 
 class SingleBandImageDataset(SensorImageDataset):
     def __init__(self, images, sensor, bands, prefix=None, ext=".tif", lowercase=False):
         super().__init__(images, sensor, bands)
         self.prefix = prefix
-        self.bands = bands2names(bands)
+        SensorEUM = getattr(sensors, sensor.value)
+        self.bands = bands2names(bands, SensorEUM)
         self.lowercase = lowercase
         self.ext = ext
 

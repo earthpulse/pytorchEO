@@ -9,6 +9,7 @@ The task of image classification consists on assigning one label to an image.
 - [EuroSAT](./eurosat.ipynb): Get started with this simple example.
 - EuroSAT [advanced](./eurosat_advanced.ipynb): Learn how to leverage the power of Pytorch EO in this advanced example covering topics such as data augmentation, hyperparameter optimization, etc.
 -  [UCMerced](./ucmerced.ipynb) Land Use.
+- [SEN12Floods](./sen12floods.ipynb): Detect floods in Sentinel 1 or 2 imagery.
 
 ## Image Multi-label Classification
 

@@ -11,7 +11,7 @@ def bands2values(bands):
 # convert bands from enum to names
 
 
-def bands2names(bands):
+def bands2names(bands, SensorENUM):
     if isinstance(bands, list):
         if len(bands) == 1:
             if isinstance(bands[0].value, list):
@@ -22,6 +22,7 @@ def bands2names(bands):
             return [band.name for band in bands]
     else:
         if isinstance(bands.value, list):
-            return [band.name for band in bands.value]
+            # retrieve the names of the bands from the values
+            return [SensorENUM(band).name for band in bands.value]
         else:
             return bands.name
