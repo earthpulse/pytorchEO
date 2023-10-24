@@ -9,7 +9,7 @@ class BaseTask(L.LightningModule):
     ):
         super().__init__()
         self.save_hyperparameters(hparams)
-        self.configure_model(model)
+        self._configure_model(model)
         self.metrics = metrics
         self.inputs = inputs
         self.outputs = outputs
@@ -19,7 +19,7 @@ class BaseTask(L.LightningModule):
             for k, v in self.metrics.items():
                 setattr(self, k, v)
 
-    def configure_model(self, model):
+    def _configure_model(self, model):
         if isinstance(model, str):
             if not "model" in self.hparams:
                 self.hparams["model"] = {}
