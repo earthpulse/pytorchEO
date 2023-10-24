@@ -32,7 +32,12 @@ def download_data(path, compressed_data_filename, data_folder, download, url, ve
 
 def generate_classes_list(uncompressed_data_path):
     # retrieve classes from folder structure
-    return sorted(os.listdir(uncompressed_data_path))
+    folders = [
+        f
+        for f in os.listdir(uncompressed_data_path)
+        if os.path.isdir(uncompressed_data_path / f)
+    ]
+    return sorted(folders)
 
 
 def generate_df(classes, uncompressed_data_path, verbose):

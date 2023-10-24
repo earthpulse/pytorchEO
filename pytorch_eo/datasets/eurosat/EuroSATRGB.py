@@ -20,6 +20,7 @@ class EuroSATRGB(EuroSATBase):
         seed=42,
         verbose=False,
         label_ratio=1,
+        data_folder="2750",
     ):
         super().__init__(
             batch_size,
@@ -38,7 +39,7 @@ class EuroSATRGB(EuroSATBase):
         )
         self.url = "http://madm.dfki.de/files/sentinel/EuroSAT.zip"
         self.compressed_data_filename = "EuroSAT.zip"
-        self.data_folder = "2750"
+        self.data_folder = data_folder
         self.in_chans = 3
 
     def get_image_dataset(self, images):
