@@ -32,6 +32,7 @@ PytorchEO has been used in the following challenges:
 
 - [EUROAVIA](./challenges/euroavia_hackathon_21) Mission: European Students Space Hackathon, 2021.
 - [On Cloud N](./challenges/OnCloudN): Cloud Cover Detection Challenge (DrivenData, 2021).
+- [Solar Panel Detection](./challenges/solar_panel_detection): Solar Panel Detection Using Sentinel-2 (Solafune, 2023).
 
 <!-- ### Build your own Datasets
 
