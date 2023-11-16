@@ -11,3 +11,6 @@ tutorials/data
 *.ckpt
 lightning_logs
 challenges/*/data
+wandb
+checkpoints
+submission**

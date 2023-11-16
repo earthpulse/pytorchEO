@@ -10,7 +10,7 @@ class ImageSegmentation(BaseTask):
         model=None,
         hparams=None,
         inputs=["image"],
-        outputs=["label"],
+        outputs=["mask"],
         loss_fn=None,
         metrics=None,
         num_classes=None,
