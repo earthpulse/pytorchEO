@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pytorch-eo"
-version = "2023.10.24-5"
+version = "2023.11.16"
 description = "Deep Learning for Earth Observation"
 authors = ["EarthPulse <it@earthpulse.es>"]
 readme = "README.md"
