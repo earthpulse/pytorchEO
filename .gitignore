@@ -14,3 +14,4 @@ challenges/*/data
 wandb
 checkpoints
 submission**
+logs**
