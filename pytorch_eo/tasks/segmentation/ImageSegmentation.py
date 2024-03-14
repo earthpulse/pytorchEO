@@ -43,5 +43,5 @@ class ImageSegmentation(BaseTask):
         self.eval()
         with torch.no_grad():
             x = self.my_prepare_data(batch)
-            y_hat = self(x)
+            y_hat = self(x.to(self.device))
             return torch.sigmoid(y_hat)
