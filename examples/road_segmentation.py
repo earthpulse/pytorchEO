@@ -92,7 +92,7 @@ trainer = L.Trainer(
             mode="max",
             save_top_k=1,
             dirpath="checkpoints",
-            filename="unet-resnet50-{epoch:02d}-{val_iou:.2f}",
+            filename="unet-resnet50-{epoch:02d}-{val_iou:.4f}",
         )
     ],
 )
