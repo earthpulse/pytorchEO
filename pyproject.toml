@@ -7,7 +7,6 @@ readme = "README.md"
 packages = [{include = "pytorch_eo"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
 torch = "^2.0.1"
 torchvision = "^0.15.1"
 lightning = "^2.0.1"

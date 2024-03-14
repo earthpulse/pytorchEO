@@ -1,7 +1,14 @@
 import torch
-import segmentation_models_pytorch as smp
 from pytorch_eo.metrics.segmentation import iou
 from ..BaseTask import BaseTask
+
+try:
+    import segmentation_models_pytorch as smp
+except ImportError:
+    raise ImportError(
+        "segmentation_models_pytorch is not installed. "
+        "Please install it with `pip install segmentation_models_pytorch`"
+    )
 
 
 class ImageSegmentation(BaseTask):
