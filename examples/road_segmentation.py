@@ -6,17 +6,18 @@ from lightning.pytorch.loggers import WandbLogger
 from lightning.pytorch.callbacks import ModelCheckpoint
 from pytorch_eo.tasks import ImageSegmentation
 from pytorch_eo.datasets import DeepGlobeRoadExtraction
-import onnxruntime
-import numpy as np
+import torch
 
 # dataset
 
 
 def norm(x, **kwargs):
+    # normalize to [0, 1]
     return (x / 255.0).astype("float32")
 
 
 def to_grey(x, **kwargs):
+    # for masks, keep only one channel
     return x[:1, ...]
 
 
@@ -44,7 +45,7 @@ val_trans = A.Compose(
 )
 
 ds = DeepGlobeRoadExtraction(
-    batch_size=8,  # adjust to GPU memory
+    batch_size=16,  # adjust to GPU memory
     num_workers=20,  # adjust to CPU cores
     pin_memory=True,
 )
@@ -63,8 +64,8 @@ hparams = {
 
 
 model = smp.Unet(
-    encoder_name="resnet34",  # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
-    encoder_weights="imagenet",  # imagenet
+    encoder_name="resnet50",  # choose encoder
+    encoder_weights="imagenet",
     in_channels=3,
     classes=1,
 )
@@ -77,9 +78,12 @@ task = ImageSegmentation(
     num_classes=ds.num_classes,
 )
 
+torch.set_float32_matmul_precision("medium")
+
 trainer = L.Trainer(
     accelerator="cuda",
     devices=1,
+    precision="16-mixed",
     max_epochs=10,
     logger=WandbLogger(project="deepglobe-road-extraction", name="unet-resnet50"),
     callbacks=[
