@@ -63,7 +63,7 @@ hparams = {
 
 
 model = smp.Unet(
-    encoder_name="resnet50",  # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
+    encoder_name="resnet34",  # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
     encoder_weights="imagenet",  # imagenet
     in_channels=3,
     classes=1,
