@@ -45,7 +45,7 @@ val_trans = A.Compose(
 )
 
 ds = DeepGlobeRoadExtraction(
-    batch_size=16,  # adjust to GPU memory
+    batch_size=8,  # adjust to GPU memory
     num_workers=20,  # adjust to CPU cores
     pin_memory=True,
 )
