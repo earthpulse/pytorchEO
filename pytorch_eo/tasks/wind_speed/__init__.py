@@ -1,0 +1,1 @@
+from .wind_speed_detection import WindSpeedDetection

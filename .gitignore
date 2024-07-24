@@ -15,3 +15,5 @@ wandb
 checkpoints
 submission**
 logs**
+*.onnx
+data
