@@ -6,8 +6,8 @@ except ImportError:
     )
 
 
-def download_eotdl(dataset_name, path, force=True):
-    from eotdl.datasets import download_dataset
+def download_eotdl(dataset_name, path, force=True, assets=True):
+    from eotdl.datasets import stage_dataset
 
     print(f"Downloading {dataset_name} to {path}...")
-    return download_dataset(dataset_name, path=path, force=force)
+    return stage_dataset(dataset_name, path=path, force=force, assets=assets)

@@ -16,7 +16,7 @@ try:
 except ImportError:
     raise ImportError("Please install eotdl with `pip install eotdl`")
 
-from eotdl.datasets import download_dataset
+from eotdl.datasets import stage_dataset
 
 from pytorch_eo.datasets import ConcatDataset
 
@@ -79,7 +79,7 @@ class EOTDLDataset(L.LightningDataModule):
     def setup(self, stage=None):
         # download dataset
         try:
-            download_path = download_dataset(
+            download_path = stage_dataset(
                 self.dataset_name,
                 version=self.version,
                 path=str(self.path),
