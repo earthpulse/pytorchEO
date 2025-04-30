@@ -29,6 +29,7 @@ packages = ["pytorch_eo"]
 
 [dependency-groups]
 dev = [
+    "eotdl>=2025.4.2.post4",
     "jupyter>=1.1.1",
     "matplotlib>=3.10.1",
 ]
